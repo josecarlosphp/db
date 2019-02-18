@@ -1,11 +1,28 @@
 <?php
 /**
- * Clase base que representa un registro en la base de datos,
- * y de la que pueden heredar cosas más complicadas.
- * 
- * @author José Carlos Cruz Parra
- * https://programadorphpfreelance.com
+ * This file is part of josecarlosphp/db - PHP classes to interact with databases.
+ *
+ * josecarlosphp/db is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * @see         https://github.com/josecarlosphp/db
+ * @copyright   2010-2019 José Carlos Cruz Parra
+ * @license     https://www.gnu.org/licenses/gpl.txt GPL version 3
+ * @desc        Base class that represents a register from bd, and from which they can inherit more complicated things.
  */
+
+namespace josecarlosphp\db;
+
 class DB_Reg
 {
 	/**
