@@ -1,5 +1,6 @@
 # DB
 PHP classes to interact with databases.
+Works with MySQL, MySQLi, and PDO.
 
 Copyright (C) 2019  José Carlos Cruz Parra <https://github.com/josecarlosphp/>
 
