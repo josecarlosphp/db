@@ -1,0 +1,21 @@
+{
+    "name": "josecarlos/DB",
+    "description": "PHP classes to interact with databases. Works with MySQL, MySQLi, and PDO.",
+    "keywords": [
+        "PHP", "DB", "database", "MySQL", "MySQLi", "PDO"
+    ],
+    "homepage": "https://github.com/josecarlosphp/DB",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "José Carlos Cruz Parra",
+            "homepage": "https://programadorphpfreelance.com/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "josecarlosphp\\DB\\": "src/DB"
+        }
+    }
+}
