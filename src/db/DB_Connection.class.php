@@ -72,7 +72,7 @@ abstract class DB_Connection
 			require_once dirname(__FILE__).'/DB_Connection_'.$class.'.class.php';
 			require_once dirname(__FILE__).'/DB_ResultSet_'.$class.'.class.php';
 
-			$class = 'DB_Connection_'.$class;
+			$class = __NAMESPACE__.'\DB_Connection_'.$class;
 
 			return new $class($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
 		}
@@ -167,7 +167,7 @@ abstract class DB_Connection
             $this->SetCharset($charset);
         }
 
-		$this->_cache = new MyCache();
+		$this->_cache = new \MyCache();
 
 		$this->_debug = $debug ? true : false;
 
@@ -569,7 +569,7 @@ abstract class DB_Connection
 					{
 						$this->_MsgDbg('Too much iteration');
 
-						throw new Exception('Too much iteration');
+						throw new \Exception('Too much iteration');
 					}
 					else
 					{
@@ -590,7 +590,7 @@ abstract class DB_Connection
 					{
 						$this->_MsgDbg('Can not re-connect after MySQL server has gone away');
 
-						throw new Exception('Can not re-connect after MySQL server has gone away');
+						throw new \Exception('Can not re-connect after MySQL server has gone away');
 					}
 				}
 				elseif($this->_autoRemoveSqlMode && (mb_stripos($this->_error, 'doesn\'t have a default value') !== false || mb_stripos($this->_error, 'Incorrect datetime value') !== false || mb_stripos($this->_error, 'Incorrect date value') !== false))
@@ -603,7 +603,7 @@ abstract class DB_Connection
 					{
 						$this->_MsgDbg('Too much iteration');
 
-						throw new Exception('Too much iteration');
+						throw new \Exception('Too much iteration');
 					}
 					elseif($this->_Execute("SET SQL_MODE = ''"))
 					{

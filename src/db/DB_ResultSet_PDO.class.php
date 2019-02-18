@@ -32,12 +32,12 @@ class DB_ResultSet_PDO extends DB_ResultSet
 
 	public function FetchRow()
     {
-		return is_object($this->Set) ? $this->Set->fetch(PDO::FETCH_NUM) : array();
+		return is_object($this->Set) ? $this->Set->fetch(\PDO::FETCH_NUM) : array();
     }
 
 	public function FetchAssoc()
     {
-		return is_object($this->Set) ? $this->Set->fetch(PDO::FETCH_ASSOC) : array();
+		return is_object($this->Set) ? $this->Set->fetch(\PDO::FETCH_ASSOC) : array();
     }
 
 	protected function _data_seek($rowindex)

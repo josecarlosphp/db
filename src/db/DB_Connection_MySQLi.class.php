@@ -45,17 +45,17 @@ class DB_Connection_MySQLi extends DB_Connection
 
 	protected function _connect($new)
 	{
-		/*
+        /*
 		if($this->_dbsock)
 		{
-			return new mysqli(null, $this->_dbuser, $this->_dbpass, $this->_dbname, null, $this->_dbsock);
+			return new \mysqli(null, $this->_dbuser, $this->_dbpass, $this->_dbname, null, $this->_dbsock);
         }
 		elseif($this->_dbport)
 		{
-			return new mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport);
+			return new \mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport);
 		}
 
-		return new mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname);
+		return new \mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname);
 		*/
 
 		return mysqli_connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport, $this->_dbsock);

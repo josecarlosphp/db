@@ -29,7 +29,7 @@ abstract class DB_ResultSet
 
 	public static function Factory($class=null)
 	{
-		$class = 'DB_ResultSet_'.(is_null($class) ? self::getClass() : $class);
+		$class = __NAMESPACE__.'/DB_ResultSet_'.(is_null($class) ? self::getClass() : $class);
 
 		return new $class();
 	}
