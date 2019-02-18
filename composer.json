@@ -1,10 +1,10 @@
 {
-    "name": "josecarlos/DB",
+    "name": "josecarlosphp/db",
     "description": "PHP classes to interact with databases. Works with MySQL, MySQLi, and PDO.",
     "keywords": [
         "PHP", "DB", "database", "MySQL", "MySQLi", "PDO"
     ],
-    "homepage": "https://github.com/josecarlosphp/DB",
+    "homepage": "https://github.com/josecarlosphp/db",
     "type": "library",
     "license": "GPL-3.0",
     "authors": [

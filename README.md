@@ -1,4 +1,4 @@
-# DB
+# db
 PHP classes to interact with databases.
 Works with MySQL, MySQLi, and PDO.
 
