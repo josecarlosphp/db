@@ -69,9 +69,6 @@ abstract class DB_Connection
 
 		if($class)
 		{
-			require_once dirname(__FILE__).'/DB_Connection_'.$class.'.php';
-			require_once dirname(__FILE__).'/DB_ResultSet_'.$class.'.php';
-
 			$class = __NAMESPACE__.'\DB_Connection_'.$class;
 
 			return new $class($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
