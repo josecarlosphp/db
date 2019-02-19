@@ -15,7 +15,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "josecarlosphp\\db\\": "src/db"
+            "josecarlosphp\\db\\": "src/db/"
         }
     }
 }
