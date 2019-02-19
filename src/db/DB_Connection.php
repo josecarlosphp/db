@@ -69,8 +69,8 @@ abstract class DB_Connection
 
 		if($class)
 		{
-			require_once dirname(__FILE__).'/DB_Connection_'.$class.'.class.php';
-			require_once dirname(__FILE__).'/DB_ResultSet_'.$class.'.class.php';
+			require_once dirname(__FILE__).'/DB_Connection_'.$class.'.php';
+			require_once dirname(__FILE__).'/DB_ResultSet_'.$class.'.php';
 
 			$class = __NAMESPACE__.'\DB_Connection_'.$class;
 
