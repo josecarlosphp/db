@@ -998,7 +998,7 @@ class DB_Reg
                 {
                     $valor .= ':00';
                 }
-                $d = DateTime::createFromFormat('H:i:s', $valor);
+                $d = \DateTime::createFromFormat('H:i:s', $valor);
                 return $d && $d->format('H:i:s') == $valor || $valor = '00:00:00';
             case 'datetime':
                 $len = mb_strlen($valor);
@@ -1014,7 +1014,7 @@ class DB_Reg
                 {
                     $valor .= ':00';
                 }
-                $d = DateTime::createFromFormat('Y-m-d H:i:s', $valor);
+                $d = \DateTime::createFromFormat('Y-m-d H:i:s', $valor);
                 return $d && $d->format('Y-m-d H:i:s') == $valor || $valor == '0000-00-00 00:00:00';
         }
 
