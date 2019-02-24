@@ -23,13 +23,13 @@
 
 namespace josecarlosphp\db;
 
-abstract class DB_ResultSet
+abstract class DbResultSet
 {
     public $Set;
 
 	public static function Factory($class=null)
 	{
-		$class = __NAMESPACE__.'\DB_ResultSet_'.(is_null($class) ? self::getClass() : $class);
+		$class = __NAMESPACE__.'\DbResultSet_'.(is_null($class) ? self::getClass() : $class);
 
 		return new $class();
 	}

@@ -23,7 +23,7 @@
 
 namespace josecarlosphp\db;
 
-abstract class DB_Connection
+abstract class DbConnection
 {
     protected $_dbhost;
     protected $_dbport;
@@ -46,7 +46,7 @@ abstract class DB_Connection
 	protected $_class;
 	protected $_result;
     /**
-     * Obtiene un objeto DB_Connection, ya sea MySQL, MySQLi, PDO.
+     * Obtiene un objeto DbConnection, ya sea MySQL, MySQLi, PDO.
      * Devuelve false en caso de error (y lanza error).
      * 
      * @param string $ip
@@ -58,7 +58,7 @@ abstract class DB_Connection
      * @param string $charset
      * @param boolean $debug
      * @param string $class
-     * @return DB_Connection
+     * @return DbConnection
      */
 	public static function Factory($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $class=null)
 	{
@@ -69,12 +69,12 @@ abstract class DB_Connection
 
 		if($class)
 		{
-			$class = __NAMESPACE__.'\DB_Connection_'.$class;
+			$class = __NAMESPACE__.'\DbConnection_'.$class;
 
 			return new $class($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
 		}
 
-		trigger_error('Can not use any DB_Connection class (PDO, MySQLi nor MySQL)', E_USER_ERROR);
+		trigger_error('Can not use any DbConnection class (PDO, MySQLi nor MySQL)', E_USER_ERROR);
 
 		return false;
 	}
@@ -121,7 +121,7 @@ abstract class DB_Connection
 		return $this->_class;
 	}
     /**
-	 * @return DB_Connection()
+	 * @return DbConnection()
 	 * @desc Constructor
 	 */
 	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false)
@@ -698,7 +698,7 @@ abstract class DB_Connection
             return $this->_cache->Get('ExistsQuery', $query);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
         $r = $rs->NumRows() > 0;
 
@@ -719,7 +719,7 @@ abstract class DB_Connection
 	 */
 	public function GetRow($query, $assoc=true, $htmlentities=true)
     {
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
 
         if($assoc)
@@ -756,7 +756,7 @@ abstract class DB_Connection
             return $this->_cache->Get('GetRows', $query);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
         $rows = array();
 
@@ -816,7 +816,7 @@ abstract class DB_Connection
 			return $this->GetValueQuery(sprintf("SELECT COUNT(*) FROM `%s`", $query), false);
 		}
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
         return $rs->NumRows();
     }
@@ -866,7 +866,7 @@ abstract class DB_Connection
         }
 
         $r = null;
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         if(($rs->Set = $this->Execute($query)))
         {
             if(($reg = $rs->FetchRow()))
@@ -942,7 +942,7 @@ abstract class DB_Connection
             return $this->_cache->Get('GetValuesQuery', $query);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
         $values = array();
         while($reg = $rs->FetchAssoc())
@@ -984,7 +984,7 @@ abstract class DB_Connection
             $array[$option[0]] = $option[1];
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute(sprintf("SELECT `%s`, `%s`, `%s` FROM `%s` WHERE `%s` = '%s' %s", $index_field, $text_field, $padre_field, $table, $padre_field, $idPadre, $order));
         while($reg = $rs->FetchAssoc())
         {
@@ -1015,7 +1015,7 @@ abstract class DB_Connection
             return $this->_cache->Get('GetArrayForHTMLSelectQuery', $query);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
         $array = array();
         if(is_array($option) && is_array($option[0]))
@@ -1096,10 +1096,10 @@ abstract class DB_Connection
 	 */
 	public function GetSQLDatabase($tables=array(), $exportstructure=true, $exportdata=true, $droptable=true)
     {
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute("SELECT VERSION()");
         list($serverversion) = $rs->FetchRow();
-		$sql = "# DB_Connection by PrestaImport\r\n"
+		$sql = "# DbConnection by josecarlosphp\r\n"
 			."#\r\n"
 			."# Host: ".$this->_dbhost."   Database: ".$this->_dbname."\r\n"
 			."# --------------------------------------------------------\r\n"
@@ -1114,7 +1114,7 @@ abstract class DB_Connection
         }
         else
         {
-            $rs = DB_ResultSet::Factory($this->_class);
+            $rs = DbResultSet::Factory($this->_class);
             $rs->Set = $this->Execute("SHOW TABLES");
             while(list($table) = $rs->FetchRow())
             {
@@ -1138,7 +1138,7 @@ abstract class DB_Connection
 
         if($exportstructure)
         {
-            $rs = DB_ResultSet::Factory($this->_class);
+            $rs = DbResultSet::Factory($this->_class);
             $rs->Set = $this->Execute("SHOW CREATE TABLE `$table`");
             $reg = $rs->FetchAssoc();
             $sql .= "#\r\n"
@@ -1198,7 +1198,7 @@ abstract class DB_Connection
 		{
 			if($exportstructure)
 			{
-				$rs = DB_ResultSet::Factory($this->_class);
+				$rs = DbResultSet::Factory($this->_class);
 				$rs->Set = $this->Execute("SHOW CREATE TABLE `$table`");
 				$reg = $rs->FetchAssoc();
 				$str = "#\r\n"
@@ -1335,7 +1335,7 @@ abstract class DB_Connection
             return $this->_cache->Get('GetFields', $tabla, $comoShowFields);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($comoShowFields ? "SHOW FIELDS FROM `{$tabla}`" : "SELECT COLUMN_NAME AS name, DATA_TYPE AS type, COLUMN_COMMENT AS comment FROM INFORMATION_SCHEMA.Columns WHERE TABLE_SCHEMA = '" . $this->_dbname . "' AND TABLE_NAME = '{$tabla}' ORDER BY ORDINAL_POSITION ASC");
         $rows = array();
         if($comoShowFields)
@@ -1380,7 +1380,7 @@ abstract class DB_Connection
 
 	public function GetFieldsNames($tabla)
     {
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute("SELECT COLUMN_NAME AS name FROM INFORMATION_SCHEMA.Columns WHERE TABLE_SCHEMA = '" . $this->_dbname . "' AND TABLE_NAME = '{$tabla}' ORDER BY ORDINAL_POSITION ASC");
         $rows = array();
         while($reg = $rs->FetchAssoc())
@@ -1400,7 +1400,7 @@ abstract class DB_Connection
 	 */
 	public function GetPrimaryKeys($tabla, $allIfNone=false)
 	{
-		$rs = DB_ResultSet::Factory($this->_class);
+		$rs = DbResultSet::Factory($this->_class);
 		$rs->Set = $this->Execute("SHOW FIELDS FROM `{$tabla}` WHERE `key` = 'PRI'");
 		$keys = array();
 		while($reg = $rs->FetchAssoc())
@@ -1429,7 +1429,7 @@ abstract class DB_Connection
             return $this->_cache->Get('TableExists', $tabla);
         }
 
-        $rs = DB_ResultSet::Factory($this->_class);
+        $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute("SHOW TABLES"); // WHERE `Tables_in_".$this->_dbname."` = '".$tabla."'
         while($reg = $rs->FetchRow())
         {
@@ -1603,7 +1603,7 @@ abstract class DB_Connection
     {
         if(($fp = fopen($filename, 'w')) !== false)
         {
-            $rs = DB_ResultSet::Factory($this->_class);
+            $rs = DbResultSet::Factory($this->_class);
             $rs->Set = $this->Execute($query);
             $primero = true;
             while($reg = $rs->FetchAssoc())

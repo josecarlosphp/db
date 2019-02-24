@@ -23,7 +23,7 @@
 
 namespace josecarlosphp\db;
 
-class DB_Connection_PDO extends DB_Connection
+class DbConnection_PDO extends DbConnection
 {
 	/**
 	 * @var PDO
@@ -118,7 +118,7 @@ class DB_Connection_PDO extends DB_Connection
 	{
 		//TODO:
 
-        trigger_error('Method get_server_version not implemented for class DB_Connection_PDO', E_ERROR);
+        trigger_error('Method get_server_version not implemented for class DbConnection_PDO', E_ERROR);
 
         return false;
 	}

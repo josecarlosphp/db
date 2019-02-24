@@ -23,7 +23,7 @@
 
 namespace josecarlosphp\db;
 
-class DB_Reg
+class DbReg
 {
 	/**
 	 * @var mixed
@@ -54,7 +54,7 @@ class DB_Reg
      */
     protected $_readonly = false;
 	/**
-	 * @var DB_Connection
+	 * @var DbConnection
 	 */
 	protected $_db;
 	/**
@@ -69,7 +69,7 @@ class DB_Reg
 	/**
 	 * Constructor
 	 *
-	 * @param DB_Connection $db
+	 * @param DbConnection $db
 	 * @param string $tabla
 	 * @param mixed $campoid
 	 */
@@ -119,7 +119,7 @@ class DB_Reg
     {
         if($this->ExistsTablaHija($q))
         {
-            $this->_tablashija[$q]['registros'][$key] = new DB_Reg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
+            $this->_tablashija[$q]['registros'][$key] = new DbReg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
             $this->_tablashija[$q]['registros'][$key]->CamposRequeridos($this->_tablashija[$q]['camposrequeridos']);
             $this->_tablashija[$q]['registros'][$key]->id(array($this->_id, $key));
 
@@ -376,7 +376,7 @@ class DB_Reg
                     );
                 foreach($keys as $key)
                 {
-                    $this->_tablashija[$q]['registros'][$key] = new DB_Reg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
+                    $this->_tablashija[$q]['registros'][$key] = new DbReg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
                 }
             }
 

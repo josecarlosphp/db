@@ -18,50 +18,52 @@
  * @see         https://github.com/josecarlosphp/db
  * @copyright   2008-2019 José Carlos Cruz Parra
  * @license     https://www.gnu.org/licenses/gpl.txt GPL version 3
- * @desc        Class to work with a database resultset MySQL.
+ * @desc        Class to work with a database resultset MySQLi.
  */
 
 namespace josecarlosphp\db;
 
-class DB_ResultSet_MySQL extends DB_ResultSet
+class DbResultSet_MySQLi extends DbResultSet
 {
 	public function FetchRow()
     {
-        return mysql_fetch_row($this->Set);
+        return mysqli_fetch_row($this->Set);
     }
 
 	public function FetchAssoc()
     {
-        return mysql_fetch_assoc($this->Set);
+        return mysqli_fetch_assoc($this->Set);
     }
 
 	protected function _data_seek($rowindex)
 	{
-		return mysql_data_seek($this->Set, $rowindex);
+		return mysqli_data_seek($this->Set, $rowindex);
 	}
 
 	public function NumRows()
     {
-        return mysql_num_rows($this->Set);
+		return mysqli_num_rows($this->Set);
     }
 
 	public function NumFields()
     {
-        return mysql_num_fields($this->Set);
+        return mysqli_num_fields($this->Set);
     }
 
 	public function FieldName($fieldindex)
     {
-        return mysql_field_name($this->Set, $fieldindex);
+        $properties = mysqli_fetch_field_direct($this->Set, $fieldindex);
+		return is_object($properties) ? $properties->name : null;
     }
 
 	protected function _field_type($fieldindex)
 	{
-		return mysql_field_type($this->Set, $fieldindex);
+		$properties = mysqli_fetch_field_direct($this->Set, $fieldindex);
+		return is_object($properties) ? $properties->type : null;
 	}
 
 	public function FreeResult()
     {
-        return mysql_free_result($this->Set);
+        return mysqli_free_result($this->Set);
     }
 }

@@ -18,24 +18,24 @@
  * @see         https://github.com/josecarlosphp/db
  * @copyright   2008-2019 José Carlos Cruz Parra
  * @license     https://www.gnu.org/licenses/gpl.txt GPL version 3
- * @desc        Class to work with a database MySQLi.
+ * @desc        Class to work with a database MySQL.
  */
 
 namespace josecarlosphp\db;
 
-class DB_Connection_MySQLi extends DB_Connection
+class DbConnection_MySQL extends DbConnection
 {
 	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false)
 	{
-		$this->_class = 'MySQLi';
+		$this->_class = 'MySQL';
 		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
 	}
 
 	protected function _setCharset($charset)
 	{
-		if(function_exists('mysqli_set_charset'))
+		if(function_exists('mysql_set_charset'))
 		{
-			return mysqli_set_charset($this->_dbcon, $charset);
+			return mysql_set_charset($charset, $this->_dbcon);
 		}
 		else
 		{
@@ -45,60 +45,47 @@ class DB_Connection_MySQLi extends DB_Connection
 
 	protected function _connect($new)
 	{
-        /*
-		if($this->_dbsock)
-		{
-			return new \mysqli(null, $this->_dbuser, $this->_dbpass, $this->_dbname, null, $this->_dbsock);
-        }
-		elseif($this->_dbport)
-		{
-			return new \mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport);
-		}
-
-		return new \mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname);
-		*/
-
-		return mysqli_connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport, $this->_dbsock);
+		return mysql_connect($this->GetServer(), $this->_dbuser, $this->_dbpass, $new);
 	}
 
 	protected function _select_db($dbname)
 	{
-		return @mysqli_select_db($this->_dbcon, $dbname);
+		return @mysql_select_db($dbname, $this->_dbcon);
 	}
 
 	protected function _ping()
 	{
-		return mysqli_ping($this->_dbcon);
+		return mysql_ping($this->_dbcon);
 	}
 
 	protected function _query($query)
 	{
-		return mysqli_query($this->_dbcon, $query);
+		return mysql_query($query, $this->_dbcon);
 	}
 
 	protected function _affected_rows()
 	{
-		return @mysqli_affected_rows($this->_dbcon);
+		return @mysql_affected_rows($this->_dbcon);
 	}
 
 	protected function _insert_id()
 	{
-		return mysqli_insert_id($this->_dbcon);
+		return mysql_insert_id($this->_dbcon);
 	}
 
 	protected function _close()
 	{
-		return @mysqli_close($this->_dbcon);
+		return @mysql_close($this->_dbcon);
 	}
 
 	protected function _error()
 	{
-		return @mysqli_error($this->_dbcon);
+		return @mysql_error($this->_dbcon);
 	}
 
 	public function real_escape_string($str)
 	{
-		return mysqli_real_escape_string($this->_dbcon, $str);
+		return mysql_real_escape_string($str, $this->_dbcon);
 	}
 
 	public function quote($str)
@@ -108,11 +95,30 @@ class DB_Connection_MySQLi extends DB_Connection
 
 	public function get_server_info()
 	{
-		return mysqli_get_server_info($this->_dbcon);
+		return mysql_get_server_info($this->_dbcon);
 	}
 
 	/*public function get_server_version()
 	{
-		return mysqli_get_server_version($this->_dbcon);
+		$str = $this->get_server_info();
+
+		$aux = '';
+		$len = mb_strlen($str);
+		for($c=0; $c<$len; $c++)
+		{
+			$char = mb_substr($str, $c, 1);
+			if(mb_strpos('0123456789.', $char) !== false)
+			{
+				$aux .= $char;
+			}
+		}
+
+		$arr = explode('.', $aux);
+		if(sizeof($arr) == 3)
+		{
+			return (($arr[0] * 10000) + ($arr[1] * 100)) + $arr[2];
+		}
+
+		return false;
 	}*/
 }

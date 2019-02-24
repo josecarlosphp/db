@@ -23,7 +23,7 @@
 
 namespace josecarlosphp\db;
 
-class DB_ResultSet_PDO extends DB_ResultSet
+class DbResultSet_PDO extends DbResultSet
 {
 	/**
 	 * @var PDOStatement
@@ -44,7 +44,7 @@ class DB_ResultSet_PDO extends DB_ResultSet
 	{
 		//TODO:
 
-		trigger_error('Method _data_seek not implemented for class DB_ResultSet_PDO', E_ERROR);
+		trigger_error('Method _data_seek not implemented for class DbResultSet_PDO', E_ERROR);
 
 		return false;
 	}
