@@ -25,10 +25,10 @@ namespace josecarlosphp\db;
 
 class DbConnection_MySQL extends DbConnection
 {
-	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false)
+	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $defaultHtmlentities=true)
 	{
 		$this->_class = 'MySQL';
-		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
+		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug, $defaultHtmlentities);
 	}
 
 	protected function _setCharset($charset)

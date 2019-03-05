@@ -46,6 +46,10 @@ abstract class DbConnection
 	protected $_class;
 	protected $_result;
     /**
+     * @var bool
+     */
+    protected $_defaultHtmlentities = true;
+    /**
      * Obtiene un objeto DbConnection, ya sea MySQL, MySQLi, PDO.
      * Devuelve false en caso de error (y lanza error).
      * 
@@ -60,7 +64,7 @@ abstract class DbConnection
      * @param string $class
      * @return DbConnection
      */
-	public static function Factory($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $class=null)
+	public static function Factory($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $class=null, $defaultHtmlentities=true)
 	{
 		if(is_null($class) || !self::validateClass($class))
 		{
@@ -124,7 +128,7 @@ abstract class DbConnection
 	 * @return DbConnection()
 	 * @desc Constructor
 	 */
-	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false)
+	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $defaultHtmlentities=true)
     {
         //Por si acaso alguien incluye el puerto en el host ($ip)
         if(($pos = mb_strpos($ip, ':')) !== false)
@@ -174,6 +178,8 @@ abstract class DbConnection
 		$this->_sleepSeconds = 1;
 		$this->_maxIteration = 3;
 		$this->_error = '';
+
+        $this->_defaultHtmlentities = $defaultHtmlentities ? true : false;
     }
     /**
 	 * Establece/Obtiene dbhost
@@ -256,6 +262,20 @@ abstract class DbConnection
             $this->_dbpass = $val;
         }
         return $this->_dbpass;
+    }
+    /**
+	 * Establece/Obtiene defaultHtmlentities
+	 *
+	 * @param bool $val
+	 * @return bool
+	 */
+    public function defaultHtmlentities($val=null)
+    {
+        if(!is_null($val))
+        {
+            $this->_defaultHtmlentities = $val ? true : false;
+        }
+        return $this->_defaultHtmlentities;
     }
     /**
 	 * Establece el modo debug o no
@@ -717,8 +737,13 @@ abstract class DbConnection
 	 * @param bool $htmlentities
 	 * @return array
 	 */
-	public function GetRow($query, $assoc=true, $htmlentities=true)
+	public function GetRow($query, $assoc=true, $htmlentities=null)
     {
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
+        }
+
         $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
 
@@ -749,11 +774,16 @@ abstract class DbConnection
 	 * @param string $indexField
 	 * @return array
 	 */
-	public function GetRows($query, $assoc=true, $htmlentities=true, $indexField=null, $cache=false)
+	public function GetRows($query, $assoc=true, $htmlentities=null, $indexField=null, $cache=false)
     {
 		if($cache && $this->_cache->Exists('GetRows', $query))
         {
             return $this->_cache->Get('GetRows', $query);
+        }
+
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
         }
 
         $rs = DbResultSet::Factory($this->_class);
@@ -830,7 +860,7 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return mixed
 	 */
-	public function GetValueById($campo, $tabla, $ids, $htmlentities=true, $cache=false)
+	public function GetValueById($campo, $tabla, $ids, $htmlentities=null, $cache=false)
     {
 		return $this->GetValue($campo, $tabla, self::ids2where($ids), true, $htmlentities, $cache);
     }
@@ -845,7 +875,7 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return mixed
 	 */
-	public function GetValue($campo, $tabla, $filtro="WHERE 1", $addcomilla=true, $htmlentities=true, $cache=false)
+	public function GetValue($campo, $tabla, $filtro="WHERE 1", $addcomilla=true, $htmlentities=null, $cache=false)
     {
         $query = $addcomilla ? "SELECT `$campo` FROM `$tabla` $filtro" : "SELECT $campo FROM $tabla $filtro";
         return $this->GetValueQuery($query, $htmlentities, $cache);
@@ -858,11 +888,16 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return mixed
 	 */
-	public function GetValueQuery($query, $htmlentities=true, $cache=false)
+	public function GetValueQuery($query, $htmlentities=null, $cache=false)
     {
         if($cache && $this->_cache->Exists('GetValueQuery', $query))
         {
             return $this->_cache->Get('GetValueQuery', $query);
+        }
+
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
         }
 
         $r = null;
@@ -892,7 +927,7 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return mixed
 	 */
-	public function GetValuesById($campos, $tabla, $ids, $htmlentities=true, $cache=false)
+	public function GetValuesById($campos, $tabla, $ids, $htmlentities=null, $cache=false)
     {
         return $this->GetValues($campos, $tabla, self::ids2where($ids), $htmlentities, $cache);
     }
@@ -906,8 +941,13 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return array
 	 */
-	public function GetValues($campos, $tabla, $filtro="WHERE 1", $htmlentities=true, $cache=false)
+	public function GetValues($campos, $tabla, $filtro="WHERE 1", $htmlentities=null, $cache=false)
     {
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
+        }
+
         $campos_select = "";
         if(is_array($campos))
         {
@@ -935,11 +975,16 @@ abstract class DbConnection
 	 * @param bool $cache
 	 * @return array
 	 */
-	public function GetValuesQuery($query, $htmlentities=true, $cache=false)
+	public function GetValuesQuery($query, $htmlentities=null, $cache=false)
     {
 		if($cache && $this->_cache->Exists('GetValuesQuery', $query))
         {
             return $this->_cache->Get('GetValuesQuery', $query);
+        }
+
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
         }
 
         $rs = DbResultSet::Factory($this->_class);
@@ -1002,17 +1047,22 @@ abstract class DbConnection
         return $array;
     }
 
-    public function GetArrayForHTMLSelect($index_field, $text_field, $table, $filter='', $option=null, $addcomilla=true, $htmlentities=true, $cache=false)
+    public function GetArrayForHTMLSelect($index_field, $text_field, $table, $filter='', $option=null, $addcomilla=true, $htmlentities=null, $cache=false)
     {
         $query = $addcomilla ? "SELECT `$index_field`, `$text_field` FROM `$table` $filter" : "SELECT $index_field, $text_field FROM $table $filter";
         return $this->GetArrayForHTMLSelectQuery($query, $option, $htmlentities, $cache);
     }
 
-    public function GetArrayForHTMLSelectQuery($query, $option=null, $htmlentities=true, $cache=false)
+    public function GetArrayForHTMLSelectQuery($query, $option=null, $htmlentities=null, $cache=false)
     {
 		if($cache && $this->_cache->Exists('GetArrayForHTMLSelectQuery', $query))
         {
             return $this->_cache->Get('GetArrayForHTMLSelectQuery', $query);
+        }
+
+        if(is_null($htmlentities))
+        {
+            $htmlentities = $this->_defaultHtmlentities;
         }
 
         $rs = DbResultSet::Factory($this->_class);
