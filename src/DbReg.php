@@ -104,7 +104,7 @@ class DbReg
 		$this->ResetData();
 	}
 
-    protected function AddTablaHija($q, $tabla, $campoid, $fijos=false, $camposrequeridos=array())
+    protected function AddTablaHija($q, $tabla, $campoid, $fijos=false, $camposrequeridos=array(), $class=null)
     {
         $this->_tablashija[$q] = array(
             'tabla'=>$tabla,
@@ -112,6 +112,7 @@ class DbReg
             'registros'=>array(),
             'fijos'=>$fijos,
             'camposrequeridos'=>$camposrequeridos,
+            'class'=>is_null($class) ? 'josecarlosphp\db\DbReg' : $class,
             );
     }
 
@@ -119,7 +120,9 @@ class DbReg
     {
         if($this->ExistsTablaHija($q))
         {
-            $this->_tablashija[$q]['registros'][$key] = new DbReg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
+            $class = $this->_tablashija[$q]['class'];
+
+            $this->_tablashija[$q]['registros'][$key] = new $class($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
             $this->_tablashija[$q]['registros'][$key]->CamposRequeridos($this->_tablashija[$q]['camposrequeridos']);
             $this->_tablashija[$q]['registros'][$key]->id(array($this->_id, $key));
 
@@ -363,20 +366,20 @@ class DbReg
             if(empty($aux['fijos']))
             {
                 $this->_tablashija[$q]['registros'] = array();
-
+                $class = $aux['class'];
                 $keys = $this->_db->GetValuesQuery(
                     sprintf(
                         "SELECT `%s` FROM `%s` WHERE `%s` = %s",
-                        $this->_tablashija[$q]['campoid'][1],
-                        $this->_tablashija[$q]['tabla'],
-                        $this->_tablashija[$q]['campoid'][0],
+                        $aux['campoid'][1],
+                        $aux['tabla'],
+                        $aux['campoid'][0],
                         $this->_db->quote($this->_id)
                         ),
                     false
                     );
                 foreach($keys as $key)
                 {
-                    $this->_tablashija[$q]['registros'][$key] = new DbReg($this->_db, $this->_tablashija[$q]['tabla'], $this->_tablashija[$q]['campoid']);
+                    $this->_tablashija[$q]['registros'][$key] = new $class($this->_db, $aux['tabla'], $aux['campoid']);
                 }
             }
 
