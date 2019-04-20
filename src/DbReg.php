@@ -189,11 +189,12 @@ class DbReg
     {
         return self::$_tablasdb[$this->_tabla]['campoid'];
     }
-
+    /**
     protected function _fieldExists($campo)
     {
         return isset(self::$_tablasdb[$this->_tabla]['fields'][$campo]);
     }
+    */
 	/**
 	 * Resetea los datos (campos)
 	 */
