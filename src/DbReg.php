@@ -189,6 +189,11 @@ class DbReg
     {
         return self::$_tablasdb[$this->_tabla]['campoid'];
     }
+
+    protected function _fieldExists($campo)
+    {
+        return isset(self::$_tablasdb[$this->_tabla]['fields'][$campo]);
+    }
 	/**
 	 * Resetea los datos (campos)
 	 */
@@ -284,7 +289,7 @@ class DbReg
         }
     }
 
-    protected function GetRow()
+    protected function _getRow()
     {
         return $this->_db->GetRow(sprintf("SELECT * FROM `%s` WHERE %s", $this->_tabla, $this->GetFilterId()), true, false);
     }
@@ -300,7 +305,7 @@ class DbReg
         {
             if($this->Exists())
             {
-                $this->_data = $this->GetRow();
+                $this->_data = $this->_getRow();
                 $this->UnsetIdFromData();
                 $this->UnserializarCamposSerializados();
 
