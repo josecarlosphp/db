@@ -283,6 +283,11 @@ class DbReg
             unset($this->_data[$campoid]);
         }
     }
+
+    protected function GetRow()
+    {
+        return $this->_db->GetRow(sprintf("SELECT * FROM `%s` WHERE %s", $this->_tabla, $this->GetFilterId()), true, false);
+    }
 	/**
 	 * Carga un registro
 	 *
@@ -295,7 +300,7 @@ class DbReg
         {
             if($this->Exists())
             {
-                $this->_data = $this->_db->GetRow(sprintf("SELECT * FROM `%s` WHERE %s", $this->_tabla, $this->GetFilterId()), true, false);
+                $this->_data = $this->GetRow();
                 $this->UnsetIdFromData();
                 $this->UnserializarCamposSerializados();
 
