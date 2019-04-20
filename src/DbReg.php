@@ -1034,6 +1034,21 @@ class DbReg
 
         return true;
     }
+    /**
+     * Formatea los datos como si fueran del objeto.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function FormatData($data)
+    {
+        foreach($data as $key=>$val)
+        {
+            $data[$key] = $this->FormatValue($key, $val);
+        }
+
+        return $data;
+    }
 
     public function FormatValue($campo, $valor)
     {
