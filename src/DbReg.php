@@ -292,7 +292,7 @@ class DbReg
 
     protected function _getRow()
     {
-        return $this->_db->GetRow(sprintf("SELECT * FROM `%s` WHERE %s", $this->_tabla, $this->GetFilterId()), true, false);
+        return $this->_db->GetRow(sprintf("SELECT r.* FROM `%s` AS r WHERE %s", $this->_tabla, $this->GetFilterId()), true, false);
     }
 	/**
 	 * Carga un registro
@@ -1308,7 +1308,7 @@ class DbReg
 		{
 			if(!$this->_idVacio($this->_id))
 			{
-				if($this->_db->Execute("UPDATE `".$this->_tabla."` SET `".$campo."` = '".$this->GetValue($campo, false)."' WHERE ".$this->GetFilterId()))
+				if($this->_db->Execute("UPDATE `".$this->_tabla."` AS r SET r.`".$campo."` = '".$this->GetValue($campo, false)."' WHERE ".$this->GetFilterId()))
 				{
 					return true;
 				}
@@ -1339,7 +1339,7 @@ class DbReg
                 foreach($campoid as $i=>$campo)
                 {
                     $aux[$campo] = $this->_id[$i];
-                    $filtro .= sprintf("%s%s = %s", $sep, $campo, $this->_db->quote($this->_id[$i]));
+                    $filtro .= sprintf("%sr.`%s` = %s", $sep, $campo, $this->_db->quote($this->_id[$i]));
                     $sep = ' AND ';
                 }
                 $this->_id = $aux; //Para que sea un array no numérico, sino con los campos como índices (por si acaso)
@@ -1349,14 +1349,14 @@ class DbReg
                 $sep = '';
                 foreach($this->_id as $campo=>$value)
                 {
-                    $filtro .= sprintf("%s%s = %s", $sep, $campo, $this->_db->quote($value));
+                    $filtro .= sprintf("%sr.%s = `%s`", $sep, $campo, $this->_db->quote($value));
                     $sep = ' AND ';
                 }
             }
         }
         else
         {
-            $filtro .= sprintf("%s = %s", $campoid, $this->_db->quote($this->_id));
+            $filtro .= sprintf("r.`%s` = %s", $campoid, $this->_db->quote($this->_id));
         }
 
         return $filtro;
