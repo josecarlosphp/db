@@ -929,6 +929,13 @@ class DbReg
 
     public function ValidateValue($campo, $valor)
     {
+        if($valor === '' && in_array($campo, $this->CamposRequeridos()))
+        {
+            $this->_errores[] = 'Falta el dato: '.$campo;
+
+            return false;
+        }
+
         if($this->IsField($campo))
         {
             if(!self::ValidateFieldValue(self::$_tablasdb[$this->_tabla]['fields'][$campo], $valor))
