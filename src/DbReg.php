@@ -322,6 +322,17 @@ class DbReg
 		return false;
 	}
     /**
+     * Carga un registro buscándolo por valor en determinado campo.
+     *
+     * @param mixed $value
+     * @param string $fieldname
+     * @return boolean
+     */
+	public function LoadByField($value, $fieldname)
+    {
+        return $this->LoadByFields(array($value), array($fieldname));
+    }
+    /**
      * Carga un registro buscándolo por valores en determinados campos.
      *
      * @param array $values
