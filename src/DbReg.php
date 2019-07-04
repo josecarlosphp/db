@@ -258,6 +258,11 @@ class DbReg
         return true;
     }
 
+    protected function DeleteMasData()
+    {
+        return true;
+    }
+
     protected function SetIdFromData()
     {
         $campoid = $this->_getCampoId();
@@ -1415,6 +1420,8 @@ class DbReg
 			}
             else
             {
+                $this->DeleteMasData();
+
                 foreach($this->_tablashija as $q=>$aux)
                 {
                     foreach(array_keys($aux['registros']) as $key)
