@@ -1440,39 +1440,39 @@ class DbReg
 		return $ok;
 	}
 
-    protected function CamposEspeciales($q, $arr=null)
+    protected function CamposEspeciales($q, $arr=null, $merge=true)
     {
         if(!is_null($arr))
         {
-            self::$_tablasdb[$this->_tabla][$q] = array_merge(self::$_tablasdb[$this->_tabla][$q], $arr);
+            self::$_tablasdb[$this->_tabla][$q] = $merge ? array_merge(self::$_tablasdb[$this->_tabla][$q], $arr) : $arr;
         }
 
         return self::$_tablasdb[$this->_tabla][$q];
     }
 
-    public function CamposRequeridos($arr=null)
+    public function CamposRequeridos($arr=null, $merge=true)
     {
-        return $this->CamposEspeciales('camposrequeridos', $arr);
+        return $this->CamposEspeciales('camposrequeridos', $arr, $merge);
     }
 
-    public function CamposReadonly($arr=null)
+    public function CamposReadonly($arr=null, $merge=true)
     {
-        return $this->CamposEspeciales('camposreadonly', $arr);
+        return $this->CamposEspeciales('camposreadonly', $arr, $merge);
     }
 
-    public function CamposExcluidos($arr=null)
+    public function CamposExcluidos($arr=null, $merge=true)
     {
-        return $this->CamposEspeciales('camposexcluidos', $arr);
+        return $this->CamposEspeciales('camposexcluidos', $arr, $merge);
     }
 
-    public function CamposEncriptados($arr=null)
+    public function CamposEncriptados($arr=null, $merge=true)
     {
-        return $this->CamposEspeciales('camposencriptados', $arr);
+        return $this->CamposEspeciales('camposencriptados', $arr, $merge);
     }
 
-    public function CamposSerializados($arr=null)
+    public function CamposSerializados($arr=null, $merge=true)
     {
-        return $this->CamposEspeciales('camposserializados', $arr);
+        return $this->CamposEspeciales('camposserializados', $arr, $merge);
     }
 
     public function FuncionEncriptar($str=null)
