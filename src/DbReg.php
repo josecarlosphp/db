@@ -357,7 +357,7 @@ class DbReg
 
 				for($c = 0; $c < $size_valores; $c++)
 				{
-					$query .= sprintf(" AND `%s` = '%s'", $fieldnames[$c], addcslashes($values[$c], "\\'"));
+					$query .= sprintf(" AND `%s` = %s", $fieldnames[$c], $this->_db->quote($values[$c]));
 				}
 
 				$this->_data = $this->_db->GetRow($query, true, false);
@@ -1387,7 +1387,7 @@ class DbReg
                 $sep = '';
                 foreach($this->_id as $campo=>$value)
                 {
-                    $filtro .= sprintf("%sr.%s = `%s`", $sep, $campo, $this->_db->quote($value));
+                    $filtro .= sprintf("%sr.`%s` = %s", $sep, $campo, $this->_db->quote($value));
                     $sep = ' AND ';
                 }
             }
