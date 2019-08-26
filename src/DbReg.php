@@ -1094,6 +1094,19 @@ class DbReg
         $type = ($pos = mb_strpos($especificacion['Type'], '(')) !== false ? mb_substr($especificacion['Type'], 0, $pos) : $especificacion['Type'];
         switch($type)
         {
+            case 'tinyint':
+            case 'smallint':
+            case 'mediumint':
+            case 'int':
+            case 'integer':
+            case 'bigint':
+            case 'bit':
+            case 'real':
+			case 'double':
+			case 'float':
+			case 'decimal':
+            case 'numeric':
+                return $valor === '' ? 0 : $valor;
             case 'varchar':
             case 'string':
             case 'tinyblob':
