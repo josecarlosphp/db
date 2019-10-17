@@ -501,7 +501,7 @@ abstract class DbConnection
                 $this->SetCharset($this->_charset);
             }
 
-            return $selectDB ? $this->SelectDB($this->_dbname, $this->_dbcon) : true;
+            return $selectDB ? $this->SelectDB($this->_dbname) : true;
         }
 
         return false;
