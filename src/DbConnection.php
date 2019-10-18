@@ -735,34 +735,47 @@ abstract class DbConnection
 	 * @param string $query
 	 * @param bool $assoc
 	 * @param bool $htmlentities
+     * @param bool $cache
 	 * @return array
 	 */
-	public function GetRow($query, $assoc=true, $htmlentities=null)
+	public function GetRow($query, $assoc=true, $htmlentities=null, $cache=false)
     {
         if(is_null($htmlentities))
         {
             $htmlentities = $this->_defaultHtmlentities;
         }
 
+        $ckey = sprintf('%s-%s', $assoc, $htmlentities);
+		if($cache && $this->_cache->Exists('GetRow', $query, $ckey))
+        {
+            return $this->_cache->Get('GetRow', $query, $ckey);
+        }
+
         $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute($query);
 
+        $row = null;
         if($assoc)
         {
             if(($reg = $rs->FetchAssoc()))
             {
-                return $htmlentities ? $this->array_htmlentities($reg) : $reg;
+                $row = $htmlentities ? $this->array_htmlentities($reg) : $reg;
             }
         }
         else
         {
             if(($reg = $rs->FetchRow()))
             {
-                return $htmlentities ? $this->array_htmlentities($reg) : $reg;
+                $row = $htmlentities ? $this->array_htmlentities($reg) : $reg;
             }
         }
 
-        return null;
+        if($cache)
+        {
+            $this->_cache->Set($row, 'GetRow', $query, $ckey);
+        }
+
+        return $row;
     }
     /**
 	 * Obtiene las filas resultado de la consulta $query como un array asociativo.
