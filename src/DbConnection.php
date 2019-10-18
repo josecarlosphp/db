@@ -776,14 +776,15 @@ abstract class DbConnection
 	 */
 	public function GetRows($query, $assoc=true, $htmlentities=null, $indexField=null, $cache=false)
     {
-		if($cache && $this->_cache->Exists('GetRows', $query))
-        {
-            return $this->_cache->Get('GetRows', $query);
-        }
-
         if(is_null($htmlentities))
         {
             $htmlentities = $this->_defaultHtmlentities;
+        }
+
+        $ckey = sprintf('%s-%s-%s', $assoc, $htmlentities, $indexField);
+		if($cache && $this->_cache->Exists('GetRows', $query, $ckey))
+        {
+            return $this->_cache->Get('GetRows', $query, $ckey);
         }
 
         $rs = DbResultSet::Factory($this->_class);
@@ -827,7 +828,7 @@ abstract class DbConnection
 
 		if($cache)
         {
-            $this->_cache->Set($rows, 'GetRows', $query);
+            $this->_cache->Set($rows, 'GetRows', $query, $ckey);
         }
 
         return $rows;
@@ -890,14 +891,15 @@ abstract class DbConnection
 	 */
 	public function GetValueQuery($query, $htmlentities=null, $cache=false)
     {
-        if($cache && $this->_cache->Exists('GetValueQuery', $query))
-        {
-            return $this->_cache->Get('GetValueQuery', $query);
-        }
-
         if(is_null($htmlentities))
         {
             $htmlentities = $this->_defaultHtmlentities;
+        }
+
+        $ckey = sprintf('%s', $htmlentities);
+        if($cache && $this->_cache->Exists('GetValueQuery', $query, $ckey))
+        {
+            return $this->_cache->Get('GetValueQuery', $query, $ckey);
         }
 
         $r = null;
@@ -912,7 +914,7 @@ abstract class DbConnection
 
         if($cache)
         {
-            $this->_cache->Set($r, 'GetValueQuery', $query);
+            $this->_cache->Set($r, 'GetValueQuery', $query, $ckey);
         }
 
         return $r;
@@ -977,14 +979,15 @@ abstract class DbConnection
 	 */
 	public function GetValuesQuery($query, $htmlentities=null, $cache=false)
     {
-		if($cache && $this->_cache->Exists('GetValuesQuery', $query))
-        {
-            return $this->_cache->Get('GetValuesQuery', $query);
-        }
-
         if(is_null($htmlentities))
         {
             $htmlentities = $this->_defaultHtmlentities;
+        }
+
+        $ckey = sprintf('%s', $htmlentities);
+		if($cache && $this->_cache->Exists('GetValuesQuery', $query, $ckey))
+        {
+            return $this->_cache->Get('GetValuesQuery', $query, $ckey);
         }
 
         $rs = DbResultSet::Factory($this->_class);
@@ -1005,7 +1008,7 @@ abstract class DbConnection
 
 		if($cache)
         {
-            $this->_cache->Set($values, 'GetValuesQuery', $query);
+            $this->_cache->Set($values, 'GetValuesQuery', $query, $ckey);
         }
 
         return $values;
@@ -1055,14 +1058,15 @@ abstract class DbConnection
 
     public function GetArrayForHTMLSelectQuery($query, $option=null, $htmlentities=null, $cache=false)
     {
-		if($cache && $this->_cache->Exists('GetArrayForHTMLSelectQuery', $query))
-        {
-            return $this->_cache->Get('GetArrayForHTMLSelectQuery', $query);
-        }
-
         if(is_null($htmlentities))
         {
             $htmlentities = $this->_defaultHtmlentities;
+        }
+
+        $ckey = sprintf('%s-%s', $option, $htmlentities);
+		if($cache && $this->_cache->Exists('GetArrayForHTMLSelectQuery', $query, $ckey))
+        {
+            return $this->_cache->Get('GetArrayForHTMLSelectQuery', $query, $ckey);
         }
 
         $rs = DbResultSet::Factory($this->_class);
@@ -1090,7 +1094,7 @@ abstract class DbConnection
 
 		if($cache)
         {
-            $this->_cache->Set($array, 'GetArrayForHTMLSelectQuery', $query);
+            $this->_cache->Set($array, 'GetArrayForHTMLSelectQuery', $query, $ckey);
         }
 
         return $array;
