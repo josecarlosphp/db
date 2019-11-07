@@ -1076,7 +1076,7 @@ abstract class DbConnection
             $htmlentities = $this->_defaultHtmlentities;
         }
 
-        $ckey = sprintf('%s-%s', $option, $htmlentities);
+        $ckey = sprintf('%s-%s', serialize($option), $htmlentities);
 		if($cache && $this->_cache->Exists('GetArrayForHTMLSelectQuery', $query, $ckey))
         {
             return $this->_cache->Get('GetArrayForHTMLSelectQuery', $query, $ckey);
