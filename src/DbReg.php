@@ -1095,6 +1095,11 @@ class DbReg
         switch($type)
         {
             case 'tinyint':
+                if($valor == 'on')
+                {
+                    $valor = 1;
+                }
+                //Sigue
             case 'smallint':
             case 'mediumint':
             case 'int':
