@@ -1020,7 +1020,8 @@ class DbReg
             case 'year':
                 return checkdate(1, 1, $valor);
             case 'date':
-                return mb_strlen($valor) == 10 && checkdate(mb_substr($valor, 5, 2), mb_substr($valor, 8, 2), mb_substr($valor, 0, 4));
+                return ($especificacion['Null'] != 'NO' && (is_null($valor) || $valor === ''))
+                    || (mb_strlen($valor) == 10 && checkdate(mb_substr($valor, 5, 2), mb_substr($valor, 8, 2), mb_substr($valor, 0, 4)));
             case 'time':
                 $len = mb_strlen($valor);
                 if($len == 0)
@@ -1041,7 +1042,14 @@ class DbReg
                 $len = mb_strlen($valor);
                 if($len == 0)
                 {
-                    $valor = '0000-00-00 00:00:00';
+                    if($especificacion['Null'] == 'NO')
+                    {
+                        $valor = '0000-00-00 00:00:00';
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 elseif($len == 10)
                 {
@@ -1051,8 +1059,7 @@ class DbReg
                 {
                     $valor .= ':00';
                 }
-                $d = \DateTime::createFromFormat('Y-m-d H:i:s', $valor);
-                return $d && $d->format('Y-m-d H:i:s') == $valor || $valor == '0000-00-00 00:00:00';
+                return $valor == '0000-00-00 00:00:00' || (($d = \DateTime::createFromFormat('Y-m-d H:i:s', $valor)) && $d->format('Y-m-d H:i:s') == $valor);
         }
 
         return true;
