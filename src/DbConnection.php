@@ -1388,7 +1388,7 @@ abstract class DbConnection
         return true;
     }
     /**
-     * Obtiene el conjunto de tablas de la base de datos actual.
+     * Obtiene el conjunto de nombres de tablas de la base de datos actual.
      *
      * @return array
      */
