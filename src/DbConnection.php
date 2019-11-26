@@ -1387,6 +1387,23 @@ abstract class DbConnection
         }
         return true;
     }
+    /**
+     * Obtiene el conjunto de tablas de la base de datos actual.
+     *
+     * @return array
+     */
+    public function GetTables()
+    {
+        $tables = array();
+        $rs = DbResultSet::Factory($this->_class);
+        $rs->Set = $this->Execute("SHOW TABLES");
+        while(list($table) = $rs->FetchRow())
+        {
+            $tables[] = $table;
+        }
+
+        return $tables;
+    }
 	/**
 	 * Obtiene los campos de una tabla
 	 *
