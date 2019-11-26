@@ -1396,7 +1396,7 @@ abstract class DbConnection
     {
         $tables = array();
         $rs = DbResultSet::Factory($this->_class);
-        $rs->Set = $this->Execute("SHOW TABLES");
+        $rs->Set = $this->Execute('SHOW TABLES');
         while(list($table) = $rs->FetchRow())
         {
             $tables[] = $table;
