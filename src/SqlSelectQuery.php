@@ -296,15 +296,37 @@ class SqlSelectQuery
 	/**
 	 * Construye y obtiene la consulta a partir de los componentes
 	 *
+     * @param bool $beautify
 	 * @return string
 	 */
-	public function BuildQuery()
+	public function BuildQuery($beautify=false)
 	{
 		$query = '';
 		foreach($this->components as $component)
 		{
-			$query .= $component->ToString().' ';
+			$query .= $component->ToString().($beautify ? "\n" : ' ');
 		}
+
+        if($beautify)
+        {
+            $query = str_replace(
+                array(
+                    ' UNION ',
+                    ' JOIN ',
+                    " LEFT\nJOIN ",
+                    " RIGHT\nJOIN ",
+                    " INNER\nJOIN ",
+                ),
+                array(
+                    "\nUNION ",
+                    "\nJOIN ",
+                    "\nLEFT JOIN ",
+                    "\nRIGHT JOIN ",
+                    "\nINNER JOIN ",
+                ),
+                $query
+            );
+        }
 
 		return trim($query);
 	}
