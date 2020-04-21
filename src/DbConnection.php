@@ -46,6 +46,11 @@ abstract class DbConnection
 	protected $_class;
 	protected $_result;
     /**
+     * Contador de consultas
+     * @var int
+     */
+    protected $_nqueries;
+    /**
      * @var bool
      */
     protected $_defaultHtmlentities = true;
@@ -178,6 +183,8 @@ abstract class DbConnection
 		$this->_sleepSeconds = 1;
 		$this->_maxIteration = 3;
 		$this->_error = '';
+
+        $this->_nqueries = 0;
 
         $this->_defaultHtmlentities = $defaultHtmlentities ? true : false;
     }
@@ -463,6 +470,15 @@ abstract class DbConnection
 
 		return $this->GetAutoRemoveSqlMode();
 	}
+    /**
+     * Obtiene cuántas consultas se han ejecutado desde que se creó el objeto hasta ahora.
+     * 
+     * @return int
+     */
+    public function GetQueriesCount()
+    {
+        return $this->_nqueries;
+    }
 	/**
 	 * Obtiene el host (ip o nombre) junto con el puerto.
 	 * Este método está obsoleto, en su lugar usar GetServer().
@@ -566,6 +582,7 @@ abstract class DbConnection
 		/*if($this->_connected)
 		{*/
 			$this->_result = $this->_query($query);
+            $this->_nqueries++;
 			/*
 			$file = 'db.log';
 			$fp = fopen($file, 'a');
