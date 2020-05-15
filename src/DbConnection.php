@@ -1479,14 +1479,24 @@ abstract class DbConnection
         return $rows;
     }
 
-	public function GetFieldsNames($tabla)
+	public function GetFieldsNames($tabla, $cache=false)
     {
+        if($cache && $this->_cache->Exists('GetFieldsNames', $tabla))
+        {
+            return $this->_cache->Get('GetFieldsNames', $tabla);
+        }
+
         $rs = DbResultSet::Factory($this->_class);
         $rs->Set = $this->Execute("SELECT COLUMN_NAME AS name FROM INFORMATION_SCHEMA.Columns WHERE TABLE_SCHEMA = '" . $this->_dbname . "' AND TABLE_NAME = '{$tabla}' ORDER BY ORDINAL_POSITION ASC");
         $rows = array();
         while($reg = $rs->FetchAssoc())
         {
             $rows[] = $reg['name'];
+        }
+
+        if($cache)
+        {
+            $this->_cache->Set($rows, 'GetFieldsNames', $tabla);
         }
 
         return $rows;
