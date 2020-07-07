@@ -627,7 +627,7 @@ abstract class DbConnection
 						throw new \Exception('Can not re-connect after MySQL server has gone away');
 					}
 				}
-				elseif($this->_autoRemoveSqlMode && (mb_stripos($this->_error, 'doesn\'t have a default value') !== false || mb_stripos($this->_error, 'Incorrect datetime value') !== false || mb_stripos($this->_error, 'Incorrect date value') !== false))
+				elseif($this->_autoRemoveSqlMode && (mb_stripos($this->_error, 'doesn\'t have a default value') !== false || mb_stripos($this->_error, 'Incorrect datetime value') !== false || mb_stripos($this->_error, 'Incorrect date value') !== false || mb_stripos($this->_error, 'Data too long for column') !== false))
                 {
                     $this->_MsgDbg($this->_error."<br />\n".htmlentities($query, $this->_quote_style, $this->_charset));
 
