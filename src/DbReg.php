@@ -252,7 +252,7 @@ class DbReg
     {
         return true;
     }
-    
+
     protected function SaveMasData()
     {
         return true;
@@ -750,6 +750,7 @@ class DbReg
 
         foreach($this->_tablashija as $q=>$aux)
         {
+            $arr[$q] = array();
             foreach($aux['registros'] as $key=>$dbreg)
             {
                 $arr[$q][$key] = $dbreg->GetData($htmlentities);
@@ -966,7 +967,7 @@ class DbReg
     }
     /**
      * Realiza una validación básica conforme al tipo de dato en la tabla.
-     * 
+     *
      * @param field $especificacion
      * @param string $valor
      * @return boolean
@@ -1536,7 +1537,7 @@ class DbReg
 	}
     /**
      * Obtiene el conjunto de mensajes de error acumulados
-     * 
+     *
      * @return array
      */
     public function ErrorStack()
