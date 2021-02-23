@@ -381,6 +381,46 @@ class DbReg
 		return false;
 	}
 
+    public function LoadByTablaHijaField($q, $value, $fieldname)
+    {
+        return $this->LoadByTablaHijaFields($q, array($value), array($fieldname));
+    }
+
+    public function LoadByTablaHijaFields($q, $values, $fieldnames)
+	{
+		$size_valores = sizeof($values);
+		$size_campos = sizeof($fieldnames);
+
+		if($size_valores > 0 && $size_valores == $size_campos)
+		{
+            $query = "SELECT * FROM `".$this->_tablashija[$q]['tabla']."` WHERE 1";
+
+            for($c = 0; $c < $size_valores; $c++)
+            {
+                $query .= sprintf(" AND `%s` = %s", $fieldnames[$c], $this->_db->quote($values[$c]));
+            }
+
+            $row = $this->_db->GetRow($query, true, false);
+            if(!empty($row) && is_array($row))
+            {
+                $id = $row[$this->_tablashija[$q]['campoid'][0]];
+
+                return $this->Load($id);
+            }
+			else
+			{
+				$this->_errores[] = 'No existe el registro';
+				$this->ResetData(false);
+			}
+		}
+		else
+		{
+			$this->_errores[] = 'Array de values y/o de fieldnames no válido';
+		}
+
+		return false;
+	}
+
     protected function LoadRegistrosHijos()
     {
         //Nota: Si tiene tablas hija damos por hecho que $this->_getCampoId() no es un array
