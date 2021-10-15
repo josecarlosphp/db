@@ -1170,7 +1170,7 @@ class DbReg
             case 'text':
             case 'mediumtext':
             case 'longtext':
-                return trim($valor);
+                return (is_array($valor) || is_object($valor)) ? $valor : trim($valor);
 			case 'time':
                 $len = mb_strlen($valor);
                 if($len == 0)
