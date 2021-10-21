@@ -513,7 +513,7 @@ class DbReg
         }
     }
 
-    protected function SerializarCamposSerializados(&$data)
+    protected function SerializarCamposSerializados($data)
     {
         foreach($this->CamposSerializados() as $campo)
         {
@@ -522,6 +522,8 @@ class DbReg
                 $data[$campo] = serialize($data[$campo]);
             }
         }
+
+        return $data;
     }
 	/**
 	 * De los elementos de $_data devuelve sólo los que figuran en la tabla como campos.
@@ -552,8 +554,7 @@ class DbReg
 	{
         if(true) //Ya no hago la comprobación previa $this->ValidateData() porque los datos son validados desde los métodos Set.
         {
-            $data = $this->GetDataFields();
-            $this->SerializarCamposSerializados($data);
+            $data = $this->SerializarCamposSerializados($this->GetDataFields());
             $campoid = $this->_getCampoId();
             if($this->_idVacio($this->_id))
             {
