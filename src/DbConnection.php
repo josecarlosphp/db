@@ -57,7 +57,7 @@ abstract class DbConnection
     /**
      * Obtiene un objeto DbConnection, ya sea MySQL, MySQLi, PDO.
      * Devuelve false en caso de error (y lanza error).
-     * 
+     *
      * @param string $ip
      * @param int $dbport
      * @param string $dbname
@@ -472,7 +472,7 @@ abstract class DbConnection
 	}
     /**
      * Obtiene cuántas consultas se han ejecutado desde que se creó el objeto hasta ahora.
-     * 
+     *
      * @return int
      */
     public function GetQueriesCount()
@@ -1407,13 +1407,25 @@ abstract class DbConnection
     /**
      * Obtiene el conjunto de nombres de tablas de la base de datos actual.
      *
+     * @param string $prefix
+     * @param bool $exclude
      * @return array
      */
-    public function GetTables()
+    public function GetTables($prefix='', $exclude=false)
     {
+        $query = "SHOW TABLES";
+
+        if ($prefix) {
+            $query .= " WHERE Tables_in_" . $this->_dbname;
+            if ($exclude) {
+                $query .= " NOT";
+            }
+            $query .= " LIKE '" . $this->real_escape_string($prefix) . "'";
+        }
+
         $tables = array();
         $rs = DbResultSet::Factory($this->_class);
-        $rs->Set = $this->Execute('SHOW TABLES');
+        $rs->Set = $this->Execute($query);
         while(list($table) = $rs->FetchRow())
         {
             $tables[] = $table;
