@@ -1420,7 +1420,7 @@ abstract class DbConnection
             if ($exclude) {
                 $query .= " NOT";
             }
-            $query .= " LIKE '" . $this->real_escape_string($prefix) . "'";
+            $query .= " LIKE '" . $this->real_escape_string($prefix) . "%'";
         }
 
         $tables = array();
