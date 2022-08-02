@@ -595,7 +595,7 @@ abstract class DbConnection
 				$this->_error = $this->_error();
 				if($this->_autoRetryOnDeadlock && mb_stripos($this->_error, 'Deadlock found when trying to get lock; try restarting transaction') !== false)
 				{
-					$this->_MsgDbg("Deadlock found when trying to get lock<br />\n".htmlentities($query, $this->_quote_style, $this->_charset));
+					$this->_MsgDbg("Deadlock found when trying to get lock<br />\n".$this->HtmlEntities($query));
 
 					$iteration++;
 
@@ -613,7 +613,7 @@ abstract class DbConnection
 				}
 				elseif($this->_autoRetryOnHasGoneAway && mb_stripos($this->_error, 'MySQL server has gone away') !== false)
 				{
-					$this->_MsgDbg("MySQL server has gone away<br />\n".htmlentities($query, $this->_quote_style, $this->_charset));
+					$this->_MsgDbg("MySQL server has gone away<br />\n".$this->HtmlEntities($query));
 
 					sleep($this->_sleepSeconds * 10);
 					if($this->Connect())
@@ -629,7 +629,7 @@ abstract class DbConnection
 				}
 				elseif($this->_autoRemoveSqlMode && (mb_stripos($this->_error, 'doesn\'t have a default value') !== false || mb_stripos($this->_error, 'Incorrect datetime value') !== false || mb_stripos($this->_error, 'Incorrect date value') !== false || mb_stripos($this->_error, 'Data too long for column') !== false))
                 {
-                    $this->_MsgDbg($this->_error."<br />\n".htmlentities($query, $this->_quote_style, $this->_charset));
+                    $this->_MsgDbg($this->_error."<br />\n".$this->HtmlEntities($query));
 
                     $iteration++;
 
@@ -646,7 +646,7 @@ abstract class DbConnection
                 }
 				else
 				{
-					$this->_MsgDbg("Error SQL<br />\n".htmlentities($query, $this->_quote_style, $this->_charset)."<br />\n".$this->_error);
+					$this->_MsgDbg("Error SQL<br />\n".$this->HtmlEntities($query)."<br />\n".$this->_error);
 				}
 			}
 
@@ -655,7 +655,7 @@ abstract class DbConnection
 
 		$this->_error = 'Not connected';
 
-		$this->_MsgDbg("Error SQL<br />\n".htmlentities($query, $this->_quote_style, $this->_charset)."<br />\n".$this->_error);
+		$this->_MsgDbg("Error SQL<br />\n".$this->HtmlEntities($query)."<br />\n".$this->_error);
 
 		return false;*/
 	}
@@ -776,14 +776,14 @@ abstract class DbConnection
         {
             if(($reg = $rs->FetchAssoc()))
             {
-                $row = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+                $row = $htmlentities ? $this->HtmlEntities($reg) : $reg;
             }
         }
         else
         {
             if(($reg = $rs->FetchRow()))
             {
-                $row = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+                $row = $htmlentities ? $this->HtmlEntities($reg) : $reg;
             }
         }
 
@@ -827,14 +827,14 @@ abstract class DbConnection
 			{
 				while($reg = $rs->FetchAssoc())
 				{
-					$rows[] = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+					$rows[] = $htmlentities ? $this->HtmlEntities($reg) : $reg;
 				}
 			}
 			else
 			{
 				while($reg = $rs->FetchAssoc())
 				{
-					$rows[$reg[$indexField]] = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+					$rows[$reg[$indexField]] = $htmlentities ? $this->HtmlEntities($reg) : $reg;
 				}
 			}
 		}
@@ -844,14 +844,14 @@ abstract class DbConnection
 			{
 				while($reg = $rs->FetchRow())
 				{
-					$rows[] = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+					$rows[] = $htmlentities ? $this->HtmlEntities($reg) : $reg;
 				}
 			}
 			else
 			{
 				while($reg = $rs->FetchRow())
 				{
-					$rows[$reg[$indexField]] = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+					$rows[$reg[$indexField]] = $htmlentities ? $this->HtmlEntities($reg) : $reg;
 				}
 			}
 		}
@@ -938,7 +938,7 @@ abstract class DbConnection
         {
             if(($reg = $rs->FetchRow()))
             {
-                $r = $htmlentities ? htmlentities($reg[0], $this->_quote_style, $this->_charset) : $reg[0];
+                $r = $htmlentities ? $this->HtmlEntities($reg[0]) : $reg[0];
             }
         }
 
@@ -1027,12 +1027,12 @@ abstract class DbConnection
         {
             if(sizeof($reg) > 1)
             {
-                $values[] = $htmlentities ? $this->array_htmlentities($reg) : $reg;
+                $values[] = $htmlentities ? $this->HtmlEntities($reg) : $reg;
             }
             else
             {
                 $keys = array_keys($reg);
-                $values[] = $htmlentities ? htmlentities($reg[$keys[0]], $this->_quote_style, $this->_charset) : $reg[$keys[0]];
+                $values[] = $htmlentities ? $this->HtmlEntities($reg[$keys[0]]) : $reg[$keys[0]];
             }
         }
 
@@ -1073,7 +1073,7 @@ abstract class DbConnection
             }
             else
             {
-                $array[$reg[$index_field]] = $htmlentities ? htmlentities($reg[$text_field], $this->_quote_style, $this->_charset) : $reg[$text_field];
+                $array[$reg[$index_field]] = $htmlentities ? $this->HtmlEntities($reg[$text_field]) : $reg[$text_field];
             }
         }
 
@@ -1119,7 +1119,7 @@ abstract class DbConnection
 
         while($reg = $rs->FetchRow())
         {
-            $array[$reg[0]] = $htmlentities ? htmlentities($reg[1], $this->_quote_style, $this->_charset) : $reg[1];
+            $array[$reg[0]] = $htmlentities ? $this->HtmlEntities($reg[1]) : $reg[1];
         }
 
 		if($cache)
@@ -1604,21 +1604,31 @@ abstract class DbConnection
         return $this->ExistsQuery(sprintf("SHOW FIELDS FROM `%s` WHERE Field = '%s'", addcslashes($tabla, "\\'"), addcslashes($field, "\\'")), $cache);
     }
     /**
-	 * Aplica htmlentities sobre todos los elementos de un array
-	 * private
+	 * Aplica htmlentities con el quotestyle y charset establecidos,
+	 * directamente si $var es una cadena, y recursivamente si es un array
 	 *
-	 * @param array $array
+	 * @param mixed $var
+	 * @return mixed
 	 */
-	private function array_htmlentities($array)
-    {
-        $keys = array_keys($array);
-        foreach($keys as $key)
-        {
-            $array[$key] = htmlentities($array[$key], $this->_quote_style, $this->_charset);
-        }
+	public function HtmlEntities($var)
+	{
+		if (is_array($var)) {
+			foreach ($var as $key=>$item) {
+				$var[$key] = $this->HtmlEntities($item);
+			}
+		} else {
+            $charset = $this->_db->GetCharSet();
+            switch ($charset) {
+                case 'UTF8MB4':
+                    $charset = 'UTF-8';
+                    break;
+            }
 
-        return $array;
-    }
+			$var = htmlentities($var, $this->_db->GetQuoteStyle(), $charset);
+		}
+
+		return $var;
+	}
 	/**
 	 * Construye la sentencia para ajustar el valor de AUTO_INCREMENT a una tabla
 	 *

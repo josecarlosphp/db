@@ -1594,19 +1594,7 @@ class DbReg
 	 */
 	protected function HtmlEntities($var)
 	{
-		if(is_array($var))
-		{
-			foreach($var as $key=>$item)
-			{
-				$var[$key] = $this->HtmlEntities($item);
-			}
-		}
-		else
-		{
-			$var = htmlentities($var, $this->_db->GetQuoteStyle(), $this->_db->GetCharSet());
-		}
-
-		return $var;
+		return $this->_db->HtmlEntities($var);
 	}
 
     protected function array_is_num($arr)
