@@ -1391,12 +1391,12 @@ abstract class DbConnection
     public function GetAccessData()
     {
         return array(
-            "ip" => $this->_dbhost,
-            "dbhost" => $this->_dbhost,
-            "dbport" => $this->_dbport,
-            "dbname" => $this->_dbname,
-            "dbuser" => $this->_dbuser,
-            "dbpass" => $this->_dbpass
+            'ip' => $this->_dbhost,
+            'dbhost' => $this->_dbhost,
+            'dbport' => $this->_dbport,
+            'dbname' => $this->_dbname,
+            'dbuser' => $this->_dbuser,
+            'dbpass' => $this->_dbpass
         );
     }
 	/**
