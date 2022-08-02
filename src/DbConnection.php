@@ -1617,14 +1617,14 @@ abstract class DbConnection
 				$var[$key] = $this->HtmlEntities($item);
 			}
 		} else {
-            $charset = $this->_db->GetCharSet();
+            $charset = $this->GetCharSet();
             switch ($charset) {
                 case 'UTF8MB4':
                     $charset = 'UTF-8';
                     break;
             }
 
-			$var = htmlentities($var, $this->_db->GetQuoteStyle(), $charset);
+			$var = htmlentities($var, $this->GetQuoteStyle(), $charset);
 		}
 
 		return $var;
