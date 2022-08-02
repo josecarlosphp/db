@@ -1234,13 +1234,22 @@ abstract class DbConnection
 
         if($exportdata)
         {
+            $c = 0;
+            $max = 1; //10
             $sql .= "#\r\n"
 				."# Dumping data for table `$table`\r\n"
 				."#\r\n";
             $rs->Set = $this->Execute("SELECT * FROM `$table`");
+            $numRows = $rs->NumRows();
             while($reg = $rs->FetchRow())
             {
-                $sql .= "INSERT INTO `$table` VALUES(";
+                if ($c % $max == 0) {
+                    $sql .= "INSERT INTO `$table` VALUES";
+                }
+
+                $c++;
+
+                $sql .= "(";
                 for($i=0, $regsize=sizeof($reg); $i<$regsize; $i++)
                 {
                     $myreg = $reg[$i];
@@ -1260,7 +1269,7 @@ abstract class DbConnection
 						}
 					}
 
-                    $sql .= $myreg.(($i < $regsize - 1) ? ", " : ");\r\n");
+                    $sql .= $myreg.(($i < $regsize - 1) ? ", " : (($c % $max == 0) || ($c == $numRows) ? ");\r\n" : "),\r\n"));
                 }
             }
         }
@@ -1295,9 +1304,11 @@ abstract class DbConnection
 					return false;
 				}
 			}
-
+//TODO: Ajsutar a max_allowed_packet size (normalmente 1 Gb)
 			if($exportdata)
 			{
+                $c = 0;
+                $max = 10;
 				$str = "#\r\n"
 					."# Dumping data for table `$table`\r\n"
 					."#\r\n";
@@ -1307,10 +1318,15 @@ abstract class DbConnection
 				}
 
 				$rs->Set = $this->Execute("SELECT * FROM `$table`");
+                $numRows = $rs->NumRows();
 				while($reg = $rs->FetchRow())
 				{
-					$str = "INSERT INTO `$table` VALUES(";
-					for($i=0, $regsize=sizeof($reg); $i<$regsize; $i++)
+                    $str = ($c % $max == 0) ? "INSERT INTO `$table` VALUES" : "";
+
+                    $c++;
+
+                    $str .= "(";
+                    for($i=0, $regsize=sizeof($reg); $i<$regsize; $i++)
 					{
 						$myreg = $reg[$i];
 
@@ -1329,8 +1345,9 @@ abstract class DbConnection
 							}
 						}
 
-						$str .= $myreg.(($i < $regsize - 1) ? ", " : ");\r\n");
+						$str .= $myreg.(($i < $regsize - 1) ? ", " : (($c % $max == 0) || ($c == $numRows) ? ");\r\n" : "),\r\n"));
 					}
+
 					if($this->Write($fp, $str) === false)
 					{
 						return false;
