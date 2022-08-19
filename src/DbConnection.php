@@ -1741,12 +1741,13 @@ abstract class DbConnection
         return false;
     }
 
-    protected static function getCommand($query)
+    protected static function getCommand($query, $toUpper = true)
     {
         $query = trim($query);
         $pos = mb_strpos($query, ' ');
+        $command = $pos !== false ? mb_substr($query, 0, $pos) : $query;
 
-        return $pos !== false ? mb_substr($query, 0, $pos) : $query;
+        return $toUpper ? mb_strtoupper($command) : $command;
     }
 
     public function SelectQuery2Csv($query, $filename, $delimiter=',', $enclosure='"', $escape_char='\\')
