@@ -69,7 +69,7 @@ class DbConnection_PDO extends DbConnection
 
 	protected function _affected_rows()
 	{
-		return $this->_result->rowCount();
+        return $this->_result === false ? -1 : $this->_result->rowCount();
 	}
 
 	protected function _insert_id()
