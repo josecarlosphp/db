@@ -1615,3 +1615,20 @@ class DbReg
         return false;
     }
 }
+
+if (!function_exists('buildQuery_Insert')) {
+    function buildQuery_Insert($data, $table, $onDuplicateKeyUpdate=false)
+    {
+        return \josecarlosphp\utils\Sql::buildQuery_Insert($data, $table, $onDuplicateKeyUpdate);
+    }
+
+    function buildQuery_Update($data, $table, $ids=null, $devolverVacio=false)
+    {
+        return \josecarlosphp\utils\Sql::buildQuery_Update($data, $table, $ids, $devolverVacio);
+    }
+
+    function buildQuery_Delete($table, $ids=null)
+    {
+        return \josecarlosphp\utils\Sql::buildQuery_Delete($table, $ids);
+    }
+}
