@@ -44,7 +44,7 @@ class DbReg
     /**
 	 * @var array
 	 */
-	private static $_tablasdb = array();
+	protected static $_tablasdb = array();
     /**
 	 * @var array
 	 */
