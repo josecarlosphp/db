@@ -1022,7 +1022,14 @@ class DbReg
             return false;
         }
 
-        $type = ($pos = mb_strpos($especificacion['Type'], '(')) !== false ? mb_substr($especificacion['Type'], 0, $pos) : $especificacion['Type'];
+        if (($pos = mb_strpos($especificacion['Type'], '(')) !== false) {
+            $type = mb_substr($especificacion['Type'], 0, $pos);
+            $length = mb_substr($especificacion['Type'], $pos + 1, -1);
+        } else {
+            $type = $especificacion['Type'];
+            $length = 1;
+        }
+
         switch($type)
         {
             case 'tinyint':
@@ -1056,7 +1063,7 @@ class DbReg
                 return true;
 			case 'character':
 			case 'char':
-                return mb_strlen($valor) <= 1;
+                return mb_strlen($valor) <= $length;
             case 'timestamp':
                 return is_numeric($valor);
             case 'year':
