@@ -1022,12 +1022,13 @@ class DbReg
             return false;
         }
 
-        if (($pos = mb_strpos($especificacion['Type'], '(')) !== false) {
-            $type = mb_substr($especificacion['Type'], 0, $pos);
-            $length = mb_substr($especificacion['Type'], $pos + 1, -1);
+        if (($posA = mb_strpos($especificacion['Type'], '(')) !== false) {
+            $posB = mb_strpos($especificacion['Type'], ')');
+            $type = mb_substr($especificacion['Type'], 0, $posA);
+            $length = mb_substr($especificacion['Type'], $posA + 1, $posB - mb_strlen($especificacion['Type']));
         } else {
             $type = $especificacion['Type'];
-            $length = 1;
+            $length = 0;
         }
 
         switch($type)
@@ -1063,7 +1064,7 @@ class DbReg
                 return true;
 			case 'character':
 			case 'char':
-                return mb_strlen($valor) <= $length;
+                return mb_strlen($valor) <= ($length ? $length : 1);
             case 'timestamp':
                 return is_numeric($valor);
             case 'year':
