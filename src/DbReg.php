@@ -763,43 +763,33 @@ class DbReg
 	 */
 	public function GetData($htmlentities=true)
 	{
-        $arr = $this->_data;
-
-		if($htmlentities)
-		{
-			foreach($arr as $key=>$val)
-			{
-                if(!$this->IsCampoEspecial('camposserializados', $key))
-                {
-                    $arr[$key] = $this->HtmlEntities($val);
-                }
-			}
-		}
+        $arr = array();
 
         $campoid = $this->_getCampoId();
-        if(is_array($campoid))
-        {
-            foreach($campoid as $campo)
-            {
+        if (is_array($campoid)) {
+            foreach ($campoid as $campo) {
                 $arr[$campo] = $htmlentities ? $this->HtmlEntities($this->_id[$campo]) : $this->_id[$campo];
             }
-        }
-        else
-        {
+        } else {
             $arr[$campoid] = $htmlentities ? $this->HtmlEntities($this->_id) : $this->_id;
         }
 
-        foreach($this->_tablashija as $q=>$aux)
-        {
+        foreach ($this->_data as $key => $val) {
+            if (!$htmlentities || $this->IsCampoEspecial('camposserializados', $key)) {
+                $arr[$key] = $val;
+            } else {
+                $arr[$key] = $this->HtmlEntities($val);
+            }
+        }
+
+        foreach ($this->_tablashija as $q=>$aux) {
             $arr[$q] = array();
-            foreach($aux['registros'] as $key=>$dbreg)
-            {
+            foreach ($aux['registros'] as $key=>$dbreg) {
                 $arr[$q][$key] = $dbreg->GetData($htmlentities);
             }
         }
 
-        foreach($this->_masData as $key=>$val)
-		{
+        foreach ($this->_masData as $key=>$val) {
 			$arr[$key] = $htmlentities ? $this->HtmlEntities($val) : $val;
 		}
 
