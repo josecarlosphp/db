@@ -1280,12 +1280,13 @@ abstract class DbConnection
 	 * @return string
 	 * @param $filename string
 	 * @param $table string
+     * @param $mode string
 	 * @param $exportstructure bool
 	 * @param $exportdata bool
 	 * @param $droptable bool
 	 * @desc Write in a file a table as an SQL script.
 	 */
-	public function WriteSQLTable($filename, $mode='w', $table, $exportstructure=true, $exportdata=true, $droptable=true)
+	public function WriteSQLTable($filename, $table, $mode='w', $exportstructure=true, $exportdata=true, $droptable=true)
     {
 		if(($fp = fopen($filename, $mode)))
 		{
