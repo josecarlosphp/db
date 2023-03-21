@@ -80,7 +80,7 @@ abstract class DbConnection
 		{
 			$class = __NAMESPACE__.'\DbConnection_'.$class;
 
-			return new $class($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug);
+			return new $class($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug, $defaultHtmlentities);
 		}
 
 		trigger_error('Can not use any DbConnection class (PDO, MySQLi nor MySQL)', E_USER_ERROR);
@@ -1305,7 +1305,7 @@ abstract class DbConnection
 					return false;
 				}
 			}
-//TODO: Ajsutar a max_allowed_packet size (normalmente 1 Gb)
+//TODO: Ajustar a max_allowed_packet size (normalmente 1 Gb)
 			if($exportdata)
 			{
                 $c = 0;
