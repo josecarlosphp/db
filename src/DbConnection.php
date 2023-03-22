@@ -1617,7 +1617,7 @@ abstract class DbConnection
 			foreach ($var as $key=>$item) {
 				$var[$key] = $this->HtmlEntities($item);
 			}
-		} else {
+		} elseif (is_string($var)) {
             $charset = $this->GetCharSet();
             switch ($charset) {
                 case 'UTF8MB4':
