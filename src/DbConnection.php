@@ -1718,6 +1718,7 @@ abstract class DbConnection
 		if($this->_debug)
 		{
 			echo "<br />\n".$str."<br />\n";
+            flush();
 		}
 	}
 
