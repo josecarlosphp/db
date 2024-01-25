@@ -1311,7 +1311,7 @@ class DbReg
     		return $this->_db->Exists($aux1, $aux2, $this->_tabla, $filtro);
     	}
 
-		return $this->_db->Exists($id, $this->_getCampoId(), $this->_tabla, $filtro);
+        return is_null($id) ? false : $this->_db->Exists($id, $this->_getCampoId(), $this->_tabla, $filtro);
 	}
 	/**
 	 * Comprueba si existe un registro con el valor tal en el campo tal.
