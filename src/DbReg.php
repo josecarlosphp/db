@@ -627,9 +627,10 @@ class DbReg
 	 *
 	 * @param array $data
 	 * @param bool $errorEnNoExistentes
+	 * @param bool $skipSoloLectura
 	 * @return bool
 	 */
-	public function SetData($data, $errorEnNoExistentes=true)
+	public function SetData($data, $errorEnNoExistentes=true, $skipSoloLectura=false)
 	{
         $ok = true;
 
@@ -637,8 +638,10 @@ class DbReg
         {
             if(isset($data[$key]))
             {
-                $ok &= $this->_setValue($key, $data[$key]);
-                unset($data[$key]);
+                //if (!$skipSoloLectura || !$this->IsCampoEspecial('camposreadonly', $key)) {
+                    $ok &= $this->_setValue($key, $data[$key]);
+                    unset($data[$key]);
+                //}
             }
         }
 
@@ -655,7 +658,9 @@ class DbReg
 			}
             elseif($errorEnNoExistentes || isset($this->_data[$key]) || $this->ExistsTablaHija($key))
 			{
-				$ok &= $this->SetValue($key, $value);
+				if (!$skipSoloLectura || !$this->IsCampoEspecial('camposreadonly', $key)) {
+                    $ok &= $this->SetValue($key, $value);
+                }
 			}
 		}
 
