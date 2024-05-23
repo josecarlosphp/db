@@ -851,20 +851,23 @@ class DbReg
 	 */
 	public function GetValue($campo, $htmlentities=true)
 	{
-        if(array_key_exists($campo, $this->_masData))
-        {
-            return $htmlentities ? $this->HtmlEntities($this->_masData[$campo]) : $this->_masData[$campo];
-        }
-        elseif(array_key_exists($campo, $this->_data))
-		{
-			return $htmlentities && !$this->IsCampoEspecial('camposserializados', $campo) ? $this->HtmlEntities($this->_data[$campo]) : $this->_data[$campo];
-		}
-		else
-		{
-			$this->_errores[] = 'No existe el campo '.$campo;
+        if (array_key_exists($campo, $this->_masData)) {
+            $value = $this->_masData[$campo];
+        } elseif (array_key_exists($campo, $this->_data)) {
+			$value = $this->_data[$campo];
+
+            if ($this->IsCampoEspecial('camposserializados', $campo)) {
+                $htmlentities = false;
+            }
+		} else {
+			$this->_errores[] = 'No existe el campo ' . $campo;
+
+            return null;
 		}
 
-		return null;
+        //$value = $this->FormatValue($campo, $value); //TODO: Descomentar para autoformat ? Y en GetData() ?
+
+        return $htmlentities ? $this->HtmlEntities($value) : $value;
 	}
 
     public function GetValueRegistroHijo($q, $key, $campo, $htmlentities=true)
