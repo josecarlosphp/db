@@ -30,7 +30,7 @@ abstract class DbConnection
     protected $_dbname;
     protected $_dbuser;
     protected $_dbpass;
-	protected $_dbsock;
+    protected $_dbsock;
     protected $_dbcon;
     protected $_quote_style;
     protected $_charset;
@@ -569,7 +569,13 @@ abstract class DbConnection
 	 */
 	public function Execute($query)
     {
-        return self::expectBool($query) ? (bool)$this->_Execute($query) : $this->_Execute($query);
+        try {
+            return self::expectBool($query) ? (bool)$this->_Execute($query) : $this->_Execute($query);
+        } catch (\Exception $e) {
+            $this->_error = $e->getMessage();
+        }
+
+        return false;
     }
 	/**
 	 * @return mixed
