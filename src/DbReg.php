@@ -1515,6 +1515,10 @@ class DbReg
 
     protected function CamposEspeciales($q, $arr=null, $merge=true)
     {
+        if (is_string($arr)) {
+            $arr = array($arr);
+        }
+
         if(!is_null($arr))
         {
             self::$_tablasdb[$this->_tabla][$q] = $merge ? array_merge(self::$_tablasdb[$this->_tabla][$q], $arr) : $arr;
