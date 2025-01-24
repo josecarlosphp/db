@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *
  * @see         https://github.com/josecarlosphp/db
- * @copyright   2010-2023 José Carlos Cruz Parra
+ * @copyright   2010-2025 José Carlos Cruz Parra
  * @license     https://www.gnu.org/licenses/gpl.txt GPL version 3
  * @desc        Base class that represents a register from bd, and from which they can inherit more complicated things.
  */
