@@ -617,9 +617,9 @@ abstract class DbConnection
 						$this->_result = $this->_Execute($query, $iteration);
 					}
 				}
-				elseif($this->_autoRetryOnHasGoneAway && mb_stripos($this->_error, 'MySQL server has gone away') !== false)
+				elseif($this->_autoRetryOnHasGoneAway && mb_stripos($this->_error, 'Server has gone away') !== false)
 				{
-					$this->_MsgDbg("MySQL server has gone away<br />\n".$this->HtmlEntities($query));
+					$this->_MsgDbg('Server has gone away<br />\n' . $this->HtmlEntities($query));
 
 					sleep($this->_sleepSeconds * 10);
 					if($this->Connect())
@@ -628,9 +628,9 @@ abstract class DbConnection
 					}
 					else
 					{
-						$this->_MsgDbg('Can not re-connect after MySQL server has gone away');
+						$this->_MsgDbg('Can not re-connect after server has gone away');
 
-						throw new \Exception('Can not re-connect after MySQL server has gone away');
+						throw new \Exception('Can not re-connect after server has gone away');
 					}
 				}
 				elseif($this->_autoRemoveSqlMode && (mb_stripos($this->_error, 'doesn\'t have a default value') !== false || mb_stripos($this->_error, 'Incorrect datetime value') !== false || mb_stripos($this->_error, 'Incorrect date value') !== false || mb_stripos($this->_error, 'Data too long for column') !== false))
@@ -678,7 +678,7 @@ abstract class DbConnection
     /**
 	 * Returns the ID generated for an AUTO_INCREMENT column by the previous INSERT query on success,
 	 * 0 if the previous query does not generate an AUTO_INCREMENT value,
-	 * or FALSE if no MySQL connection was established.
+	 * or FALSE if no connection was established.
 	 * @return mixed
 	 */
 	public function Insert_id()
