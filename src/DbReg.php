@@ -1627,6 +1627,11 @@ class DbReg
 }
 
 if (!function_exists('buildQuery_Insert')) {
+    function buildQuery_InsertMulti($datas, $table, $onDuplicateKeyUpdate=false)
+    {
+        return \josecarlosphp\utils\Sql::buildQuery_InsertMulti($datas, $table, $onDuplicateKeyUpdate);
+    }
+
     function buildQuery_Insert($data, $table, $onDuplicateKeyUpdate=false)
     {
         return \josecarlosphp\utils\Sql::buildQuery_Insert($data, $table, $onDuplicateKeyUpdate);
