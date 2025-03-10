@@ -62,9 +62,15 @@ class DbConnection_PDO extends DbConnection
 		return true;
 	}
 
-	protected function _query($query)
+    protected function _query($query)
 	{
-		return $this->_dbcon->query($query);
+        try {
+            return $this->_dbcon->query($query);
+        } catch (\PDOException $e) {
+            $this->_error = $e->getMessage();
+        }
+
+        return false;
 	}
 
 	protected function _affected_rows()
