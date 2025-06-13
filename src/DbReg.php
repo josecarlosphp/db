@@ -1575,6 +1575,21 @@ class DbReg
     {
         return $this->_db->GetRows(sprintf("SELECT * FROM `%s` %s", $this->_tabla, $filtro), $assoc, $htmlentities, $indexField, $cache);
     }
+
+    public function Search($q, $fields = null, $assoc=true, $htmlentities=true, $indexField=null, $cache=false)
+    {
+        if (is_null($fields)) {
+            $fields = array_keys($this->_getFields());
+        }
+
+        $filter = sprintf(
+            "WHERE CONCAT_WS(' ', `%s`) LIKE '%%%s%%'",
+            implode('`, `', $fields),
+            $this->_db->real_escape_string($q)
+        );
+
+        return $this->GetRows($filter, $assoc, $htmlentities, $indexField, $cache);
+    }
 	/**
 	 * Obtiene el texto del último error, o null si no hay errores registrados
 	 *
