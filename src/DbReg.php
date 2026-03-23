@@ -1150,8 +1150,7 @@ class DbReg
         switch($type)
         {
             case 'tinyint':
-                if($valor == 'on')
-                {
+                if (in_array(trim(strtolower($valor)), ['on', 'yes', 'sí', 'si', '1'])) {
                     $valor = 1;
                 }
                 //Sigue
