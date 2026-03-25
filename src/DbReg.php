@@ -1150,8 +1150,10 @@ class DbReg
         switch($type)
         {
             case 'tinyint':
-                if (in_array(trim(strtolower($valor)), ['on', 'yes', 'sí', 'si', '1', 'oui', 'da'])) {
+                if (in_array(trim(strtolower($valor)), ['on', 'yes', 'sí', 'si', '1', 'oui', 'da', 'aga', 'ara'])) {
                     $valor = 1;
+                } elseif (in_array(trim(strtolower($valor)), ['off', 'no', '0', 'non', 'net', 'niet', 'nieto', 'nyet', 'hет'])) {
+                    $valor = 0;
                 }
                 //Sigue
             case 'smallint':
