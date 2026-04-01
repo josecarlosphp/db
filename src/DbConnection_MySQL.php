@@ -73,10 +73,17 @@ class DbConnection_MySQL extends DbConnection
 		return mysql_insert_id($this->_dbcon);
 	}
 
-	protected function _close()
-	{
-		return @mysql_close($this->_dbcon);
-	}
+    protected function _close()
+    {
+        if (
+            !empty($this->_dbcon)
+            && (($this->_dbcon instanceof mysql && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
+        ) {
+            return mysql_close($this->_dbcon);
+        }
+
+        return true;
+    }
 
 	protected function _error()
 	{

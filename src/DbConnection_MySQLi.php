@@ -86,10 +86,17 @@ class DbConnection_MySQLi extends DbConnection
 		return mysqli_insert_id($this->_dbcon);
 	}
 
-	protected function _close()
-	{
-		return @mysqli_close($this->_dbcon);
-	}
+    protected function _close()
+    {
+        if (
+            !empty($this->_dbcon)
+            && (($this->_dbcon instanceof mysqli && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
+        ) {
+            return mysqli_close($this->_dbcon);
+        }
+
+        return true;
+    }
 
 	protected function _error()
 	{
