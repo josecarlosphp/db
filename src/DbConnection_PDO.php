@@ -146,6 +146,14 @@ class DbConnection_PDO extends DbConnection
 			$dsn .= 'host='.$host;
 		}
 
-		return new \PDO($dsn, $user, $password, array(\PDO::ATTR_TIMEOUT=>$timeout, \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY=>true));
+		return new \PDO(
+            $dsn,
+            $user,
+            $password,
+            array(
+                \PDO::ATTR_TIMEOUT => $timeout,
+                (defined('Pdo\Mysql::ATTR_USE_BUFFERED_QUERY') ? \PDO\Mysql::ATTR_USE_BUFFERED_QUERY : \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY) => true,
+            )
+        );
 	}
 }
