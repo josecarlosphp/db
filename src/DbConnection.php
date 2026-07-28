@@ -67,7 +67,7 @@ abstract class DbConnection
      * @param string $charset
      * @param boolean $debug
      * @param string $class
-     * @return DbConnection
+     * @return DbConnection|false
      */
 	public static function Factory($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $class=null, $defaultHtmlentities=true)
 	{
@@ -688,7 +688,7 @@ abstract class DbConnection
 	abstract protected function _insert_id();
 
 	/**
-	 * Inicia una transacción SQL.
+	 * Starts a SQL transaction.
 	 * @return bool
 	 */
 	public function beginTransaction()
@@ -699,7 +699,7 @@ abstract class DbConnection
 	abstract protected function _beginTransaction();
 
 	/**
-	 * Confirma una transacción SQL.
+	 * Confirms a SQL transaction.
 	 * @return bool
 	 */
 	public function commit()
@@ -710,7 +710,7 @@ abstract class DbConnection
 	abstract protected function _commit();
 
 	/**
-	 * Revierte/cancela una transacción SQL.
+	 * Reverts/cancels a SQL transaction.
 	 * @return bool
 	 */
 	public function rollback()
@@ -721,7 +721,7 @@ abstract class DbConnection
 	abstract protected function _rollback();
 
 	/**
-	 * Comprueba si hay una transacción activa.
+	 * Checks if there is an active transaction.
 	 * @return bool
 	 */
 	public function inTransaction()
@@ -731,8 +731,8 @@ abstract class DbConnection
 
 	abstract protected function _inTransaction();
     /**
-	 * Comprueba si existe un registro en una tabla con el valor(es) especificado(s) para el campo(s) dado(s). El filtro sólo permite where.
-     * Se puede guardar el resultado en cache.
+	 * Checks if there is a record in a table with the specified value(s) for the given field(s). The filter only allows where.
+     * The result can be cached.
 	 *
 	 * @param mixed $valores
 	 * @param mixed $campos
@@ -771,8 +771,8 @@ abstract class DbConnection
         return $this->ExistsQuery($query, $cache);
     }
     /**
-	 * Comprueba si la consulta indicada devuelve al menos una fila.
-     * Se puede guardar el resultado en cache.
+	 * Checks if the given query returns at least one row.
+     * The result can be cached.
 	 *
 	 * @param string $query
      * @param bool $cache
@@ -797,7 +797,7 @@ abstract class DbConnection
 		return $r;
     }
     /**
-	 * Obtiene la primera fila resultado de la consulta $query
+	 * Gets the first row of the result of the query $query
 	 *
 	 * @param string $query
 	 * @param bool $assoc
@@ -845,8 +845,8 @@ abstract class DbConnection
         return $row;
     }
     /**
-	 * Obtiene las filas resultado de la consulta $query como un array asociativo.
-	 * Si se pasa $indexField, el índice de cada fila será el valor de ese campo.
+	 * Gets the rows of the result of the query $query as an associative array.
+	 * If $indexField is passed, the index of each row will be the value of that field.
 	 *
 	 * @param string $query
 	 * @param bool $assoc
@@ -914,8 +914,8 @@ abstract class DbConnection
         return $rows;
     }
     /**
-	 * Obtiene el número de filas resultantes de la consulta $query
-	 * o de la tabla si se pasa el nombre de una tabla como parámetro
+	 * Gets the number of rows resulting from the query $query
+	 * or from the table if the name of a table is passed as a parameter
 	 *
 	 * @param string $query
 	 * @return int
@@ -932,7 +932,7 @@ abstract class DbConnection
         return $rs->NumRows();
     }
 	/**
-	 * Obtiene el valor de un campo de una tabla para un determinado registro identificado por $ids
+	 * Gets the value of a field of a table for a certain record identified by $ids
 	 *
 	 * @param string $campo
 	 * @param string $tabla
@@ -946,7 +946,7 @@ abstract class DbConnection
 		return $this->GetValue($campo, $tabla, self::ids2where($ids), true, $htmlentities, $cache);
     }
     /**
-	 * Obtiene el valor de un campo del primer registro de una tabla filtrada (nulo si no hay registros)
+	 * Gets the value of a field of the first record of a filtered table (null if there are no records)
 	 *
 	 * @param string $campo
 	 * @param string $tabla
@@ -962,7 +962,7 @@ abstract class DbConnection
         return $this->GetValueQuery($query, $htmlentities, $cache);
     }
     /**
-	 * Obtiene el valor de un campo del primer registro del resultado de una consulta (nulo si no hay)
+	 * Gets the value of a field of the first record of the result of a query (null if there are no records)
 	 *
 	 * @param string $query
 	 * @param bool $htmlentities
@@ -1000,7 +1000,7 @@ abstract class DbConnection
         return $r;
     }
     /**
-	 * Obtiene un array con los valores de los campos de una tabla para un determinado registro identificado por $ids
+	 * Gets an array with the values of the fields of a table for a certain record identified by $ids
 	 *
 	 * @param array $campos
 	 * @param string $tabla
@@ -1014,7 +1014,7 @@ abstract class DbConnection
         return $this->GetValues($campos, $tabla, self::ids2where($ids), $htmlentities, $cache);
     }
     /**
-	 * Obtiene un array con los valores de un campo(s) de los registros de una tabla filtrada
+	 * Gets an array with the values of a field(s) of the records of a filtered table
 	 *
 	 * @param mixed $campos
 	 * @param string $tabla
@@ -1050,7 +1050,7 @@ abstract class DbConnection
         return $this->GetValuesQuery("SELECT $campos_select FROM `$tabla` $filtro", $htmlentities, $cache);
     }
     /**
-	 * Obtiene un array con los valores resultado de una consulta
+	 * Gets an array with the values of the result of a query
 	 *
 	 * @param string $query
 	 * @param bool $htmlentities
@@ -1434,8 +1434,8 @@ abstract class DbConnection
 
 	abstract public function quote($str);
 	/**
-	 * Obtiene los datos de acceso (dbhost, dbport, dbname, dbuser, dbpass) en forma de array asociativo.
-	 * Repite dbhost con el índice ip, por compatibilidad hacia atrás.
+	 * Gets the access data (dbhost, dbport, dbname, dbuser, dbpass) in the form of an associative array.
+	 * Repeats dbhost with index ip, for backward compatibility.
 	 *
 	 * @return array
 	 */
@@ -1451,7 +1451,7 @@ abstract class DbConnection
         );
     }
 	/**
-	 * Establece los datos de conexión (dbhost, dbport, dbname, dbuser, dbpass) mediante un array asociativo $data
+	 * Sets the connection data (dbhost, dbport, dbname, dbuser, dbpass) using an associative array $data
 	 *
 	 * @param array $data
 	 * @param bool $connect
@@ -1473,7 +1473,7 @@ abstract class DbConnection
         return true;
     }
     /**
-     * Obtiene el conjunto de nombres de tablas de la base de datos actual.
+     * Gets the set of table names from the current database.
      *
      * @param string $prefix
      * @param bool $exclude
@@ -1502,7 +1502,7 @@ abstract class DbConnection
         return $tables;
     }
 	/**
-	 * Obtiene los campos de una tabla
+	 * Gets the fields of a table
 	 *
 	 * @param string $tabla
 	 * @param bool $comoShowFields
@@ -1582,8 +1582,8 @@ abstract class DbConnection
         return $rows;
     }
 	/**
-	 * Obtiene el nombre de los campos que son clave primaria,
-	 * o todos si no hay ninguno y $allIfNone es true
+	 * Gets the name of the fields that are primary key,
+	 * or all if there are none and $allIfNone is true
 	 *
 	 * @param string $tabla
 	 * @param bool $allIfNone
@@ -1607,7 +1607,7 @@ abstract class DbConnection
 		return $keys;
 	}
     /**
-	 * Comprueba si existe una tabla
+	 * Checks if a table exists
 	 *
 	 * @param string $tabla
 	 * @param bool $cache
@@ -1642,8 +1642,8 @@ abstract class DbConnection
         return false;
     }
     /**
-	 * Comprueba si existe un campo en una tabla.
-     * Por defecto, se guarda el resultado en cache.
+	 * Checks if a field exists in a table.
+     * By default, the result is saved in cache.
 	 *
 	 * @param string $tabla
 	 * @param string $field
@@ -1655,8 +1655,8 @@ abstract class DbConnection
         return $this->ExistsQuery(sprintf("SHOW FIELDS FROM `%s` WHERE Field = '%s'", addcslashes($tabla, "\\'"), addcslashes($field, "\\'")), $cache);
     }
     /**
-	 * Aplica htmlentities con el quotestyle y charset establecidos,
-	 * directamente si $var es una cadena, y recursivamente si es un array
+	 * Applies htmlentities with the quotestyle and charset established,
+	 * directly if $var is a string, and recursively if it is an array
 	 *
 	 * @param mixed $var
 	 * @return mixed
@@ -1681,7 +1681,7 @@ abstract class DbConnection
 		return $var;
 	}
 	/**
-	 * Construye la sentencia para ajustar el valor de AUTO_INCREMENT a una tabla
+	 * Builds the sentence to adjust the AUTO_INCREMENT value to a table
 	 *
 	 * @param string $tabla
 	 * @param string $campo_id
@@ -1693,7 +1693,7 @@ abstract class DbConnection
 		return sprintf("ALTER TABLE `{$tabla}` AUTO_INCREMENT = %u", $sobreMaxId ? 1 + intval($this->GetValue("MAX(`{$campo_id}`)", $tabla, 'WHERE 1', false, false)) : 1);
 	}
     /**
-	 * Ajusta el valor de AUTO_INCREMENT a una tabla
+	 * Adjusts the AUTO_INCREMENT value to a table
 	 *
 	 * @param string $tabla
 	 * @param string $campo_id

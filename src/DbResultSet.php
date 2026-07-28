@@ -138,9 +138,9 @@ abstract class DbResultSet
                 {
                     $myreg = $reg[$i];
                     $echo .= "<td " . $td_format;
-                    if($distributecolumnsuniformly && !eregi("width", $td_format))
+                    if($distributecolumnsuniformly && stripos($td_format, "width") === false)
                         $echo .= " width='" . $td_width;
-                    if(!eregi("align", $td_format))
+                    if(stripos($td_format, "align") === false)
                         switch($this->FieldType($i))
                         {
                             case "numeric":
@@ -172,7 +172,7 @@ abstract class DbResultSet
 	 */
 	public function DataSeek($rowindex)
     {
-        return ($this->NumRows() > 0) ? $this->_data_seek($this->Set, $rowindex) : false;
+        return ($this->NumRows() > 0) ? $this->_data_seek($rowindex) : false;
     }
 	abstract protected function _data_seek($rowindex);
     /**

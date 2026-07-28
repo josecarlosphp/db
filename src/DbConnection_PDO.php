@@ -55,7 +55,7 @@ class DbConnection_PDO extends DbConnection
 	{
 		try {
 			$this->Execute('SELECT 1');
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 
