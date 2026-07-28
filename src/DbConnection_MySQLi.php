@@ -25,7 +25,7 @@ namespace josecarlosphp\db;
 
 class DbConnection_MySQLi extends DbConnection
 {
-	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $defaultHtmlentities=true)
+	public function __construct($ip = 'localhost', $dbport = 3306, $dbname = '', $dbuser = 'root', $dbpass = 'root', $connect = true, $charset = null, $debug = false, $defaultHtmlentities = true)
 	{
 		$this->_class = 'MySQLi';
 		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug, $defaultHtmlentities);
@@ -33,23 +33,20 @@ class DbConnection_MySQLi extends DbConnection
 
 	protected function _setCharset($charset)
 	{
-		if(function_exists('mysqli_set_charset'))
-		{
+		if (function_exists('mysqli_set_charset')) {
 			return mysqli_set_charset($this->_dbcon, $charset);
-		}
-		else
-		{
-			return $this->Execute('SET CHARACTER SET '.$charset);
+		} else {
+			return $this->Execute('SET CHARACTER SET ' . $charset);
 		}
 	}
 
 	protected function _connect($new)
 	{
-        /*
+		/*
 		if($this->_dbsock)
 		{
 			return new \mysqli(null, $this->_dbuser, $this->_dbpass, $this->_dbname, null, $this->_dbsock);
-        }
+		}
 		elseif($this->_dbport)
 		{
 			return new \mysqli($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbname, $this->_dbport);
@@ -81,22 +78,80 @@ class DbConnection_MySQLi extends DbConnection
 		return @mysqli_affected_rows($this->_dbcon);
 	}
 
+	protected $_inTransaction = false;
+
 	protected function _insert_id()
 	{
 		return mysqli_insert_id($this->_dbcon);
 	}
 
-    protected function _close()
-    {
-        if (
-            !empty($this->_dbcon)
-            && (($this->_dbcon instanceof mysqli && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
-        ) {
-            return mysqli_close($this->_dbcon);
-        }
+	protected function _beginTransaction()
+	{
+		if (function_exists('mysqli_begin_transaction')) {
+			$res = @mysqli_begin_transaction($this->_dbcon);
+		} else {
+			$res = @mysqli_query($this->_dbcon, 'START TRANSACTION');
+		}
 
-        return true;
-    }
+		if ($res) {
+			$this->_inTransaction = true;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _commit()
+	{
+		if (function_exists('mysqli_commit')) {
+			$res = @mysqli_commit($this->_dbcon);
+		} else {
+			$res = @mysqli_query($this->_dbcon, 'COMMIT');
+		}
+
+		if ($res) {
+			$this->_inTransaction = false;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _rollback()
+	{
+		if (function_exists('mysqli_rollback')) {
+			$res = @mysqli_rollback($this->_dbcon);
+		} else {
+			$res = @mysqli_query($this->_dbcon, 'ROLLBACK');
+		}
+
+		if ($res) {
+			$this->_inTransaction = false;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _inTransaction()
+	{
+		return $this->_inTransaction;
+	}
+
+	protected function _close()
+	{
+		if (
+			!empty($this->_dbcon)
+			&& (($this->_dbcon instanceof mysqli && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
+		) {
+			return mysqli_close($this->_dbcon);
+		}
+
+		return true;
+	}
 
 	protected function _error()
 	{
@@ -110,7 +165,7 @@ class DbConnection_MySQLi extends DbConnection
 
 	public function quote($str)
 	{
-		return "'".$this->real_escape_string($str)."'";
+		return "'" . $this->real_escape_string($str) . "'";
 	}
 
 	public function get_server_info()

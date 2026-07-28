@@ -30,7 +30,7 @@ class DbConnection_PDO extends DbConnection
 	 */
 	//protected $_dbcon;
 
-	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $defaultHtmlentities=true)
+	public function __construct($ip = 'localhost', $dbport = 3306, $dbname = '', $dbuser = 'root', $dbpass = 'root', $connect = true, $charset = null, $debug = false, $defaultHtmlentities = true)
 	{
 		$this->_class = 'PDO';
 		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug, $defaultHtmlentities);
@@ -38,7 +38,7 @@ class DbConnection_PDO extends DbConnection
 
 	protected function _setCharset($charset)
 	{
-		return $this->Execute('SET NAMES \''.$charset.'\''); //return $this->Execute('SET CHARACTER SET '.$charset);
+		return $this->Execute('SET NAMES \'' . $charset . '\''); //return $this->Execute('SET CHARACTER SET '.$charset);
 	}
 
 	protected function _connect($new)
@@ -48,7 +48,7 @@ class DbConnection_PDO extends DbConnection
 
 	protected function _select_db($dbname)
 	{
-		return $this->Execute('USE `'.$dbname.'`');
+		return $this->Execute('USE `' . $dbname . '`');
 	}
 
 	protected function _ping()
@@ -62,25 +62,69 @@ class DbConnection_PDO extends DbConnection
 		return true;
 	}
 
-    protected function _query($query)
+	protected function _query($query)
 	{
-        try {
-            return $this->_dbcon->query($query);
-        } catch (\PDOException $e) {
-            $this->_error = $e->getMessage();
-        }
+		try {
+			return $this->_dbcon->query($query);
+		} catch (\PDOException $e) {
+			$this->_error = $e->getMessage();
+		}
 
-        return false;
+		return false;
 	}
 
 	protected function _affected_rows()
 	{
-        return $this->_result === false ? -1 : $this->_result->rowCount();
+		return $this->_result === false ? -1 : $this->_result->rowCount();
 	}
 
 	protected function _insert_id()
 	{
 		return $this->_dbcon->lastInsertId();
+	}
+
+	protected function _beginTransaction()
+	{
+		try {
+			return $this->_dbcon->beginTransaction();
+		} catch (\PDOException $e) {
+			$this->_error = $e->getMessage();
+		}
+
+		return false;
+	}
+
+	protected function _commit()
+	{
+		try {
+			return $this->_dbcon->commit();
+		} catch (\PDOException $e) {
+			$this->_error = $e->getMessage();
+		}
+
+		return false;
+	}
+
+	protected function _rollback()
+	{
+		try {
+			return $this->_dbcon->rollBack();
+		} catch (\PDOException $e) {
+			$this->_error = $e->getMessage();
+		}
+
+		return false;
+	}
+
+	protected function _inTransaction()
+	{
+		try {
+			return $this->_dbcon->inTransaction();
+		} catch (\PDOException $e) {
+			$this->_error = $e->getMessage();
+		}
+
+		return false;
 	}
 
 	protected function _close()
@@ -102,8 +146,7 @@ class DbConnection_PDO extends DbConnection
 		$aux = $this->_dbcon->quote($str);
 
 		//Nota: quote() no es exactamente lo mismo que mysql_real_escape_string()
-		if(mb_substr($aux, 0, 1) == "'" && mb_substr($aux, -1) == "'")
-		{
+		if (mb_substr($aux, 0, 1) == "'" && mb_substr($aux, -1) == "'") {
 			$aux = mb_substr($aux, 1, -1);
 		}
 
@@ -124,9 +167,9 @@ class DbConnection_PDO extends DbConnection
 	{
 		//TODO:
 
-        trigger_error('Method get_server_version not implemented for class DbConnection_PDO', E_ERROR);
+		trigger_error('Method get_server_version not implemented for class DbConnection_PDO', E_ERROR);
 
-        return false;
+		return false;
 	}
 
 	protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
@@ -134,26 +177,26 @@ class DbConnection_PDO extends DbConnection
 		$dsn = 'mysql:';
 
 		if ($dbname) {
-			$dsn .= 'dbname='.$dbname.';';
+			$dsn .= 'dbname=' . $dbname . ';';
 		}
 
 		$matches = array();
 		if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
-			$dsn .= 'host='.$matches[1].';port='.$matches[2];
+			$dsn .= 'host=' . $matches[1] . ';port=' . $matches[2];
 		} elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
-			$dsn .= 'unix_socket='.$matches[1];
+			$dsn .= 'unix_socket=' . $matches[1];
 		} else {
-			$dsn .= 'host='.$host;
+			$dsn .= 'host=' . $host;
 		}
 
 		return new \PDO(
-            $dsn,
-            $user,
-            $password,
-            array(
-                \PDO::ATTR_TIMEOUT => $timeout,
-                (defined('Pdo\Mysql::ATTR_USE_BUFFERED_QUERY') ? \PDO\Mysql::ATTR_USE_BUFFERED_QUERY : \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY) => true,
-            )
-        );
+			$dsn,
+			$user,
+			$password,
+			array(
+				\PDO::ATTR_TIMEOUT => $timeout,
+				(defined('Pdo\Mysql::ATTR_USE_BUFFERED_QUERY') ? \PDO\Mysql::ATTR_USE_BUFFERED_QUERY : \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY) => true,
+			)
+		);
 	}
 }

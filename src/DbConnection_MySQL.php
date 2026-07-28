@@ -25,7 +25,7 @@ namespace josecarlosphp\db;
 
 class DbConnection_MySQL extends DbConnection
 {
-	public function __construct($ip='localhost', $dbport=3306, $dbname='', $dbuser='root', $dbpass='root', $connect=true, $charset=null, $debug=false, $defaultHtmlentities=true)
+	public function __construct($ip = 'localhost', $dbport = 3306, $dbname = '', $dbuser = 'root', $dbpass = 'root', $connect = true, $charset = null, $debug = false, $defaultHtmlentities = true)
 	{
 		$this->_class = 'MySQL';
 		parent::__construct($ip, $dbport, $dbname, $dbuser, $dbpass, $connect, $charset, $debug, $defaultHtmlentities);
@@ -33,13 +33,10 @@ class DbConnection_MySQL extends DbConnection
 
 	protected function _setCharset($charset)
 	{
-		if(function_exists('mysql_set_charset'))
-		{
+		if (function_exists('mysql_set_charset')) {
 			return mysql_set_charset($charset, $this->_dbcon);
-		}
-		else
-		{
-			return $this->Execute('SET CHARACTER SET '.$charset);
+		} else {
+			return $this->Execute('SET CHARACTER SET ' . $charset);
 		}
 	}
 
@@ -68,22 +65,65 @@ class DbConnection_MySQL extends DbConnection
 		return @mysql_affected_rows($this->_dbcon);
 	}
 
+	protected $_inTransaction = false;
+
 	protected function _insert_id()
 	{
 		return mysql_insert_id($this->_dbcon);
 	}
 
-    protected function _close()
-    {
-        if (
-            !empty($this->_dbcon)
-            && (($this->_dbcon instanceof mysql && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
-        ) {
-            return mysql_close($this->_dbcon);
-        }
+	protected function _beginTransaction()
+	{
+		$res = @mysql_query('START TRANSACTION', $this->_dbcon);
+		if ($res) {
+			$this->_inTransaction = true;
 
-        return true;
-    }
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _commit()
+	{
+		$res = @mysql_query('COMMIT', $this->_dbcon);
+		if ($res) {
+			$this->_inTransaction = false;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _rollback()
+	{
+		$res = @mysql_query('ROLLBACK', $this->_dbcon);
+		if ($res) {
+			$this->_inTransaction = false;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected function _inTransaction()
+	{
+		return $this->_inTransaction;
+	}
+
+	protected function _close()
+	{
+		if (
+			!empty($this->_dbcon)
+			&& (($this->_dbcon instanceof mysql && @$this->_dbcon->thread_id) || is_resource($this->_dbcon))
+		) {
+			return mysql_close($this->_dbcon);
+		}
+
+		return true;
+	}
 
 	protected function _error()
 	{
@@ -97,7 +137,7 @@ class DbConnection_MySQL extends DbConnection
 
 	public function quote($str)
 	{
-		return "'".$this->real_escape_string($str)."'";
+		return "'" . $this->real_escape_string($str) . "'";
 	}
 
 	public function get_server_info()

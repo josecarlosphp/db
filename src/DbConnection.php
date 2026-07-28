@@ -686,6 +686,50 @@ abstract class DbConnection
         return $this->_insert_id();
     }
 	abstract protected function _insert_id();
+
+	/**
+	 * Inicia una transacción SQL.
+	 * @return bool
+	 */
+	public function beginTransaction()
+	{
+		return $this->_beginTransaction();
+	}
+
+	abstract protected function _beginTransaction();
+
+	/**
+	 * Confirma una transacción SQL.
+	 * @return bool
+	 */
+	public function commit()
+	{
+		return $this->_commit();
+	}
+
+	abstract protected function _commit();
+
+	/**
+	 * Revierte/cancela una transacción SQL.
+	 * @return bool
+	 */
+	public function rollback()
+	{
+		return $this->_rollback();
+	}
+
+	abstract protected function _rollback();
+
+	/**
+	 * Comprueba si hay una transacción activa.
+	 * @return bool
+	 */
+	public function inTransaction()
+	{
+		return $this->_inTransaction();
+	}
+
+	abstract protected function _inTransaction();
     /**
 	 * Comprueba si existe un registro en una tabla con el valor(es) especificado(s) para el campo(s) dado(s). El filtro sólo permite where.
      * Se puede guardar el resultado en cache.
